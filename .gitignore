@@ -1,0 +1,18 @@
+bin/
+obj/
+.vs/
+*.user
+Resources/
+FIEL/
+*.pfx
+*.pem
+*.key
+*.cer
+packages/
+
+# Configuración con datos de la FIEL (clave, nombres de archivos)
+secretos.config
+
+# Paquetes descargados del SAT
+Paquetes/
+DescargaMasivaSatVISUAL/

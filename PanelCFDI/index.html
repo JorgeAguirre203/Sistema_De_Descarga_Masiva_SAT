@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CFDI recibidos | Descarga Masiva SAT</title>
+
+    <link rel="stylesheet" href="estilo.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         BARRA SUPERIOR
+         ===================================================== -->
+
+    <header class="top">
+        <div class="wrap">
+
+            <div class="marca">
+                <span>CFDI recibidos</span>
+                <span class="rfc" id="rfc"></span>
+            </div>
+
+            <div class="estado">
+                <span class="punto"></span>
+                <span id="estado">Sin información del proceso</span>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- =====================================================
+         CONTENIDO PRINCIPAL
+         ===================================================== -->
+
+    <main class="wrap">
+
+
+        <!-- =================================================
+     RESUMEN
+     ================================================= -->
+
+        <section class="resumen" aria-label="Resumen de actividad">
+
+            <div>
+                <b id="r-total">0</b>
+                <span>CFDI descargados</span>
+            </div>
+
+            <div>
+                <b id="r-proceso">0</b>
+                <span>Solicitudes en proceso</span>
+            </div>
+
+            <div>
+                <b id="r-ultima">—</b>
+                <span>Última descarga</span>
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+     CONTROL DE FECHA
+     ================================================= -->
+
+        <section class="control" id="control">
+
+            <div class="control-info">
+
+                <span class="control-label">
+                    Control de búsqueda
+                </span>
+
+                <div class="control-fecha">
+                    Buscando desde:
+                    <strong id="desde">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="control-acciones">
+
+                <button type="button"
+                        id="btnActual"
+                        class="btn btn-secundario">
+                    Usar fecha actual
+                </button>
+
+                <div class="fecha-grupo">
+
+                    <input type="datetime-local"
+                           id="fechaPasada"
+                           aria-label="Fecha de inicio de búsqueda">
+
+                    <button type="button"
+                            id="btnFecha"
+                            class="btn btn-principal">
+                        Aplicar fecha
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div id="msg"
+                 class="mensaje"
+                 aria-live="polite">
+            </div>
+
+        </section>
+
+        <section class="control" id="controlrfc">
+
+            <div class="control-infoRFC">
+                <span class="control-label">
+                    Llenado de RFC:
+                </span>
+            </div>
+
+
+            <div class="control-acciones">
+
+                <!-- RFC SOLICITANTE -->
+                <div class="rfc-grupo">
+
+                    <label for="rfcSolicitante">RFC solicitante:</label>
+
+                    <input type="text"
+                           id="rfcSolicitante"
+                           aria-label="RFC solicitante">
+
+                    <button type="button"
+                            id="btnRfcSolicitante"
+                            class="btn btn-secundario">
+                        Cambiar RFC
+                    </button>
+
+                </div>
+
+
+                <!-- RFC RECIBIDO -->
+                <div class="rfc-grupo">
+
+                    <label for="rfcRecibido">RFC recibido:       </label>
+
+                    <input type="text"
+                           id="rfcRecibido"
+                           aria-label="RFC recibido">
+
+                    <button type="button"
+                            id="btnRfcRecibido"
+                            class="btn btn-secundario">
+                        Cambiar RFC
+                    </button>
+
+                </div>
+
+
+                <!-- RFC EMITIDO -->
+                <div class="rfc-grupo">
+
+                    <label for="rfcEmitido">RFC emitido:</label>
+
+                    <input type="text"
+                           id="rfcEmitido"
+                           aria-label="RFC emitido">
+
+                    <button type="button"
+                            id="btnRfcEmitido"
+                            class="btn btn-secundario">
+                        Cambiar RFC
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div id="msgRfc"
+                 class="mensaje"
+                 aria-live="polite">
+            </div>
+
+        </section>
+
+
+
+
+
+        <!-- =================================================
+     COMPROBANTES
+     ================================================= -->
+
+        <section class="comprobantes">
+
+            <div class="seccion-header">
+
+                <div>
+                    <h2>Comprobantes</h2>
+
+                    <p class="subtitulo">
+                        CFDI recibidos descargados desde el SAT
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- FILTROS -->
+
+            <div class="filtros">
+
+                <input type="search"
+                       id="buscar"
+                       placeholder="Buscar por emisor, RFC o UUID"
+                       aria-label="Buscar comprobantes">
+
+                <select id="mes"
+                        aria-label="Filtrar por mes">
+
+                    <option value="">
+                        Todos los meses
+                    </option>
+
+                </select>
+
+                <select id="tipo"
+                        aria-label="Filtrar por tipo">
+
+                    <option value="">
+                        Todos los tipos
+                    </option>
+
+                    <option value="Ingreso">
+                        Ingreso
+                    </option>
+
+                    <option value="Egreso">
+                        Egreso
+                    </option>
+
+                    <option value="Pago">
+                        Pago
+                    </option>
+
+                    <option value="Nómina">
+                        Nómina
+                    </option>
+
+                    <option value="Traslado">
+                        Traslado
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TABLA -->
+
+            <div class="tabla">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Emisor</th>
+                            <th>UUID</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th class="num">Total</th>
+                            <th>Archivos</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="filas"></tbody>
+
+                </table>
+
+
+                <div class="vacio"
+                     id="vacio">
+                    Aún no hay comprobantes descargados.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+     SOLICITUDES SAT
+     ================================================= -->
+
+        <section class="sol">
+
+            <div class="seccion-header">
+
+                <div>
+                    <h2>Solicitudes al SAT</h2>
+
+                    <p class="subtitulo">
+                        Estado de las solicitudes realizadas al servicio de descarga
+                    </p>
+                </div>
+
+            </div>
+
+
+            <ul id="solicitudes"></ul>
+
+
+            <div class="vacio"
+                 id="vacio-sol">
+                No hay solicitudes registradas.
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+
+                // =====================================================
+                // UTILIDADES
+                // =====================================================
+
+                const $ = id => document.getElementById(id);
+
+
+                async function obtener(url) {
+
+                    const r = await fetch(url);
+
+                    if (!r.ok) {
+                        throw new Error(
+                            url + ' respondió ' + r.status
+                        );
+                    }
+
+                    return r.json();
+                }
+
+
+                // =====================================================
+                // CONTROL DE LA FECHA DE BÚSQUEDA
+                // ControlConsultasSAT
+                // =====================================================
+
+                async function cargar() {
+
+                    try {
+
+                        const r =
+                            await obtener('/Control/Estado?tipo=RECIBIDO');
+
+                        $('desde').textContent =
+                            r.fecha || '—';
+
+                    }
+                    catch (e) {
+
+                        $('msg').textContent =
+                            e.message;
+
+                    }
+                }
+
+
+                async function fijar(datos) {
+
+                    try {
+
+                        const body =
+                            new URLSearchParams({
+                                tipo: 'RECIBIDO',
+                                ...datos
+                            });
+
+
+                        const resp = await fetch(
+                            '/Control/Fijar',
+                            {
+                                method: 'POST',
+                                body
+                            }
+                        );
+
+
+                        if (!resp.ok) {
+
+                            throw new Error(
+                                '/Control/Fijar respondió ' +
+                                resp.status
+                            );
+
+                        }
+
+
+                        const r =
+                            await resp.json();
+
+
+                        $('msg').textContent =
+                            r.ok
+                                ? 'Actualizado correctamente'
+                                : r.error;
+
+
+                        if (r.ok) {
+                            cargar();
+                        }
+
+                    }
+                    catch (e) {
+
+                        $('msg').textContent =
+                            e.message;
+
+                    }
+                }
+// =====================================================
+// GUARDAR RFC
+// =====================================================
+
+async function guardarRfc(url, tipo, idInput) {
+
+    const rfc = $(idInput).value.trim().toUpperCase();
+
+    if (!rfc) {
+        $('msgRfc').textContent = 'Escribe un RFC.';
+        return;
+    }
+
+    try {
+
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ tipo, rfc })
+        });
+
+        if (!resp.ok) {
+            throw new Error(url + ' respondió ' + resp.status);
+        }
+
+        const data = await resp.json();
+
+        $('msgRfc').textContent = data.ok
+            ? 'RFC ' + tipo.toLowerCase() + ' actualizado'
+            : data.error;
+
+    }
+    catch (e) {
+        $('msgRfc').textContent = e.message;
+    }
+}
+
+
+$('btnRfcRecibido').onclick = () =>
+    guardarRfc('/Control/FijarRfc', 'RECIBIDO', 'rfcRecibido');
+
+$('btnRfcEmitido').onclick = () =>
+    guardarRfc('/Control/FijarRfc', 'EMISOR', 'rfcEmitido');
+
+$('btnRfcSolicitante').onclick = () =>
+    guardarRfc('/Control/FijarRfc', 'SOLICITANTE', 'rfcSolicitante');
+
+
+                // =====================================================
+                // BOTÓN FECHA ACTUAL
+                // =====================================================
+
+                $('btnActual').onclick = () => {
+
+                    if (
+                        confirm(
+                            'Se buscará solo desde hoy en adelante. ¿Continuar?'
+                        )
+                    ) {
+
+                        fijar({
+                            modo: 'actual'
+                        });
+
+                    }
+
+                };
+
+
+                // =====================================================
+                // BOTÓN APLICAR FECHA
+                // =====================================================
+
+                $('btnFecha').onclick = () => {
+
+                    const v =
+                        $('fechaPasada').value;
+
+
+                    if (!v) {
+
+                        $('msg').textContent =
+                            'Elige una fecha.';
+
+                        return;
+                    }
+
+
+                    fijar({
+                        modo: 'fecha',
+                        fecha: v
+                    });
+
+                };
+
+
+                // =====================================================
+                // DATOS DEL PANEL
+                // =====================================================
+
+                let cfdis = [];
+
+                /*
+                    Ejemplo:
+
+                    {
+                        fecha: '2026-10-01T10:00:00',
+                        emisor: '',
+                        rfc: '',
+                        uuid: '',
+                        tipo: 'Ingreso',
+                        total: 0,
+                        xml: '',
+                        pdf: ''
+                    }
+                */
+
+
+                let solicitudes = [];
+
+                /*
+                    Ejemplo:
+
+                    {
+                        id: '',
+                        desde: '2026-09-01 00:00',
+                        hasta: '2026-09-30 00:00',
+                        estado: 'En proceso'
+                    }
+                */
+
+
+                let info = {};
+
+                /*
+                    Ejemplo:
+
+                    {
+                        rfc: '',
+                        estado: '',
+                        ultima: '',
+                        total: 0
+                    }
+                */
+
+
+                // =====================================================
+                // CARGAR DATOS
+                // =====================================================
+
+                async function cargarDatos() {
+
+                    try {
+
+                        const [
+                            c,
+                            s,
+                            i
+                        ] = await Promise.all([
+
+                            obtener('/Cfdi/Lista'),
+
+                            obtener('/Cfdi/Solicitudes'),
+
+                            obtener('/Cfdi/Info')
+
+                        ]);
+
+
+                        cfdis = c;
+
+                        solicitudes = s;
+
+                        info = i;
+
+
+                        pintar();
+
+                    }
+                    catch (e) {
+
+                        $('estado').textContent =
+                            'Error cargando datos: ' +
+                            e.message;
+
+                    }
+                }
+
+
+                // =====================================================
+                // ESCAPAR HTML
+                // =====================================================
+
+                const esc = s =>
+                    String(s ?? '')
+                        .replace(
+                            /[&<>"']/g,
+                            c => ({
+                                '&': '&amp;',
+                                '<': '&lt;',
+                                '>': '&gt;',
+                                '"': '&quot;',
+                                "'": '&#39;'
+                            }[c])
+                        );
+
+
+                // =====================================================
+                // FORMATO DE DINERO
+                // =====================================================
+
+                const dinero = n =>
+                    Number(n).toLocaleString(
+                        'es-MX',
+                        {
+                            style: 'currency',
+                            currency: 'MXN'
+                        }
+                    );
+
+
+                // =====================================================
+                // FORMATO DE FECHA
+                // =====================================================
+
+                const fechaMx = f =>
+                    f
+                        ? f
+                            .slice(0, 10)
+                            .split('-')
+                            .reverse()
+                            .join('/')
+                        : '';
+
+
+                // =====================================================
+                // CLASE DEL TIPO DE CFDI
+                // =====================================================
+
+                const claseTipo = t =>
+                    ({
+                        Ingreso: 'ok',
+                        Nómina: 'ok',
+                        Egreso: 'err',
+                        Pago: 'pend'
+                    }[t] || 'pend');
+
+
+                // =====================================================
+                // CLASE DEL ESTADO DE SOLICITUD
+                // =====================================================
+
+                const claseEstado = e =>
+                    /descargada|terminada|sin cfdi/i.test(e)
+                        ? 'ok'
+                        : /error|rechazada|vencida/i.test(e)
+                            ? 'err'
+                            : 'pend';
+
+
+                // =====================================================
+                // PINTAR INFORMACIÓN
+                // =====================================================
+
+                function pintar() {
+
+                    // -------------------------------------------------
+                    // INFORMACIÓN GENERAL
+                    // -------------------------------------------------
+
+                    $('rfc').textContent =
+                        info.rfc || '';
+
+
+                    $('estado').textContent =
+                        info.estado ||
+                        'Sin información del proceso';
+
+
+                    $('r-total').textContent =
+                        (
+                            info.total ??
+                            cfdis.length
+                        ).toLocaleString('es-MX');
+
+
+                    $('r-proceso').textContent =
+                        solicitudes.filter(
+                            s =>
+                                claseEstado(s.estado) === 'pend'
+                        ).length;
+
+
+                    $('r-ultima').textContent =
+                        info.ultima || '—';
+
+
+                    // -------------------------------------------------
+                    // MESES DISPONIBLES
+                    // -------------------------------------------------
+
+                    const meses = [
+                        ...new Set(
+                            cfdis
+                                .map(c => c.fecha.slice(0, 7))
+                        )
+                    ]
+                        .sort()
+                        .reverse();
+
+
+                    const actual =
+                        $('mes').value;
+
+
+                    $('mes').innerHTML =
+                        '<option value="">Todos los meses</option>' +
+
+                        meses
+                            .map(
+                                m =>
+                                    `<option value="${m}">${m}</option>`
+                            )
+                            .join('');
+
+
+                    $('mes').value =
+                        actual;
+
+
+                    // -------------------------------------------------
+                    // TABLA DE CFDI
+                    // -------------------------------------------------
+
+                    $('filas').innerHTML =
+                        cfdis
+                            .map(
+                                c => `
+
+                                <tr
+                                    data-mes="${esc(c.fecha.slice(0, 7))}"
+                                    data-tipo="${esc(c.tipo)}">
+
+                                    <td>
+                                        ${fechaMx(c.fecha)}
+                                    </td>
+
+
+                                    <td class="emisor">
+
+                                        ${esc(c.emisor)}
+
+                                        <small>
+                                            ${esc(c.rfc)}
+                                        </small>
+
+                                    </td>
+
+
+                                    <td class="uuid">
+                                        ${esc(c.uuid)}
+                                    </td>
+
+
+                                    <td>
+
+                                        <span
+                                            class="tag ${claseTipo(c.tipo)}">
+
+                                            ${esc(c.tipo)}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td class="num">
+                                        ${dinero(c.total)}
+                                    </td>
+
+
+                                    <td class="acc">
+
+                                        ${
+                                            c.xml
+                                                ? `<a
+                                                    href="${esc(c.xml)}"
+                                                    target="_blank"
+                                                    rel="noopener">
+                                                    XML
+                                                   </a>`
+                                                : ''
+                                        }
+
+
+                                        ${
+                                            c.pdf
+                                                ? `<a
+                                                    href="${esc(c.pdf)}"
+                                                    target="_blank"
+                                                    rel="noopener">
+                                                    PDF
+                                                   </a>`
+                                                : ''
+                                        }
+
+                                    </td>
+
+                                </tr>
+
+                            `
+                            )
+                            .join('');
+
+
+                    // -------------------------------------------------
+                    // SOLICITUDES SAT
+                    // -------------------------------------------------
+
+                    $('solicitudes').innerHTML =
+                        solicitudes
+                            .map(
+                                s => `
+
+                                <li
+                                    class="${
+                                        claseEstado(s.estado) === 'ok'
+                                            ? 'listo'
+                                            : ''
+                                    }">
+
+                                    <span>
+
+                                        <strong>
+                                            Solicitud ${esc(s.id)}
+                                        </strong>
+
+                                        <small>
+                                            del
+                                            ${fechaMx(s.desde)}
+                                            al
+                                            ${fechaMx(s.hasta)}
+                                        </small>
+
+                                    </span>
+
+
+                                    <span
+                                        class="tag ${claseEstado(s.estado)}">
+
+                                        ${esc(s.estado)}
+
+                                    </span>
+
+                                </li>
+
+                            `
+                            )
+                            .join('');
+
+
+                    // -------------------------------------------------
+                    // MENSAJE DE SOLICITUDES VACÍAS
+                    // -------------------------------------------------
+
+                    $('vacio-sol').style.display =
+                        solicitudes.length
+                            ? 'none'
+                            : 'block';
+
+
+                    // -------------------------------------------------
+                    // APLICAR FILTROS
+                    // -------------------------------------------------
+
+                    filtrar();
+
+                }
+
+
+                // =====================================================
+                // FILTRAR CFDI
+                // =====================================================
+
+                function filtrar() {
+
+                    const t =
+                        $('buscar')
+                            .value
+                            .trim()
+                            .toLowerCase();
+
+
+                    const filas =
+                        [
+                            ...document.querySelectorAll(
+                                '#filas tr'
+                            )
+                        ];
+
+
+                    let n = 0;
+
+
+                    filas.forEach(f => {
+
+                        const ok =
+
+                            f.textContent
+                                .toLowerCase()
+                                .includes(t)
+
+                            &&
+
+                            (
+                                !$('mes').value ||
+                                f.dataset.mes ===
+                                $('mes').value
+                            )
+
+                            &&
+
+                            (
+                                !$('tipo').value ||
+                                f.dataset.tipo ===
+                                $('tipo').value
+                            );
+
+
+                        f.hidden = !ok;
+
+
+                        if (ok) {
+                            n++;
+                        }
+
+                    });
+
+
+                    $('vacio').textContent =
+
+                        cfdis.length
+
+                            ? 'No hay comprobantes con esos filtros. Cambia la búsqueda o el mes.'
+
+                            : 'Aún no hay comprobantes descargados.';
+
+
+                    $('vacio').style.display =
+                        n
+                            ? 'none'
+                            : 'block';
+
+                }
+
+
+                // =====================================================
+                // EVENTOS DE FILTROS
+                // =====================================================
+
+                ['buscar', 'mes', 'tipo']
+                    .forEach(
+                        id =>
+                            $(id).addEventListener(
+                                'input',
+                                filtrar
+                            )
+                    );
+
+
+                // =====================================================
+                // ARRANQUE
+                // =====================================================
+
+                pintar();
+
+                cargar();
+
+                cargarDatos();
+
+
+                // Actualizar automáticamente
+                // cada 30 segundos
+
+                setInterval(
+                    cargarDatos,
+                    30000
+                );
+
+    </script>
+
+</body>
+
+</html>
