@@ -6,107 +6,66 @@ namespace sw.descargamasiva.Services
 {
     internal class GenerarSolici
     {
- 
         static string urlSolicitud =
             "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/SolicitaDescargaService.svc";
         static string urlSolicitudRecibidosAction =
             "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescargaRecibidos";
-         
+
+        // 1. Añadimos 'string rfcActual' como parámetro de entrada
         public static string GenerarSolicitudRecibidos(
-     X509Certificate2 certificate,
-     string authorization,
-     out DateTime fechaInicial,
-     out DateTime fechaFinal,
-           out string RfcReceptor,
+            string rfcActual,
+            X509Certificate2 certificate,
+            string authorization,
+            out DateTime fechaInicial,
+            out DateTime fechaFinal,
+            out string RfcReceptor,
             out string RfcEmisor,
             out string RfcSolicitante)
         {
-            RfcReceptor = Guardarenbased.ObtenerRFC("RECIBIDO");
-            RfcEmisor = Guardarenbased.ObtenerRFCEMISOR("EMISOR");
-            RfcSolicitante = Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE");
+            // 2. Usamos el rfcActual para buscar los datos específicos de este contribuyente en la BD
+            RfcReceptor = rfcActual;
+            RfcEmisor = rfcActual;
+            RfcSolicitante = rfcActual; // O bien, si tu lógica usa un solicitante maestro por RFC, asegúrate de pasarlo aquí.
 
-
-            fechaInicial = Guardarenbased.ObtenerUltimaConsulta("RECIBIDO");
-
-
-
+            // Obtenemos la última fecha de consulta vinculada estrictamente a este RFC
+            fechaInicial = Guardarenbased.ObtenerUltimaConsultaPorRfc(rfcActual, "RECIBIDO");
             fechaFinal = fechaInicial.AddHours(24);
-         
 
             Console.WriteLine();
-            Console.WriteLine(
-                "Periodo que se solicitará al SAT:");
+            Console.WriteLine("Periodo que se solicitará al SAT:");
+            Console.WriteLine($"Inicio: {fechaInicial:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"Final : {fechaFinal:yyyy-MM-dd HH:mm:ss}");
 
-            Console.WriteLine(
-        $"Inicio: {fechaInicial:yyyy-MM-dd HH:mm:ss}");
+            Solicitud solicitud = new Solicitud(
+                urlSolicitud,
+                urlSolicitudRecibidosAction);
 
-            Console.WriteLine(
-                $"Final : {fechaFinal:yyyy-MM-dd HH:mm:ss}");
-
-
-            Solicitud solicitud =
-                new Solicitud(
-                    urlSolicitud,
-                    urlSolicitudRecibidosAction);
-
-
-          
-            // GENERAR XML
-          
-
-            string xmlSolicitud =
-                solicitud.Generate(
-
-                    certificate: certificate,
-
-                    rfcEmisor:
-                        Guardarenbased.ObtenerRFCEMISOR("EMISOR"),
-
-                    rfcReceptor:
-                       Guardarenbased.ObtenerRFC("RECIBIDO"),
-
-                    rfcSolicitante:
-                        Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE"),
-
-                    fechaInicial:
-                        fechaInicial.ToString(
-                            "yyyy-MM-ddTHH:mm:ss"),
-
-                    fechaFinal:
-                        fechaFinal.ToString(
-                            "yyyy-MM-ddTHH:mm:ss")
-                );
-
+            // 3. Generamos el XML inyectando el rfcActual en lugar de datos quemados
+            string xmlSolicitud = solicitud.Generate(
+                certificate: certificate,
+                rfcEmisor: rfcActual,
+                rfcReceptor: rfcActual,
+                rfcSolicitante: rfcActual,
+                fechaInicial: fechaInicial.ToString("yyyy-MM-ddTHH:mm:ss"),
+                fechaFinal: fechaFinal.ToString("yyyy-MM-ddTHH:mm:ss")
+            );
 
             Console.WriteLine();
-            Console.WriteLine(
-                "Solicitud XML a enviar al SAT:");
-
+            Console.WriteLine("Solicitud XML a enviar al SAT:");
             Console.WriteLine(xmlSolicitud);
 
-
-            
             // ENVIAR AL SAT
-            
-            string respuesta =
-                solicitud.Send(authorization);
+            string respuesta = solicitud.Send(authorization);
 
-
-            // SOLO LLEGAMOS AQUÍ SI SAT ACEPTÓ
-          
-
-            Guardarenbased.ActualizarUltimaConsulta(
+            // Actualizamos la última consulta para este RFC en específico
+            Guardarenbased.ActualizarUltimaConsultaPorRfc(
+                rfcActual,
                 "RECIBIDO",
                 fechaFinal);
 
-
             Console.WriteLine();
-            Console.WriteLine(
-                "Última consulta actualizada en BD.");
-
-            Console.WriteLine(
-                $"Nueva fecha: {fechaFinal:yyyy-MM-dd HH:mm:ss}");
-
+            Console.WriteLine("Última consulta actualizada en BD.");
+            Console.WriteLine($"Nueva fecha: {fechaFinal:yyyy-MM-dd HH:mm:ss}");
 
             return respuesta;
         }

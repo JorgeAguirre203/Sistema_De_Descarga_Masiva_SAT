@@ -86,40 +86,52 @@ namespace sw.descargamasiva.InsertarBD
         }
 
 
-    
-       
 
-        public static DateTime ObtenerUltimaConsulta(string tipo)
+
+
+        public static DateTime ObtenerUltimaConsultaPorRfc(string rfc, string tipo)
         {
             string query = @"
-                SELECT ultimaConsulta
-                FROM ControlConsultasSAT
-                WHERE tipo = @tipo;
-            ";
+        SELECT ultimaConsulta 
+        FROM ControlConsultasSAT 
+        WHERE RFC = @rfc AND tipo = @tipo;
+    ";
 
-            using (SqlConnection conn =
-                new SqlConnection(connectionString))
-            using (SqlCommand cmd =
-                new SqlCommand(query, conn))
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                cmd.Parameters.Add(
-                    "@tipo",
-                    SqlDbType.VarChar,
-                    15).Value = tipo;
+                cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc;
+                cmd.Parameters.Add("@tipo", SqlDbType.VarChar, 15).Value = tipo;
 
                 conn.Open();
 
-                object resultado =
-                    cmd.ExecuteScalar();
+                object resultado = cmd.ExecuteScalar();
 
-                if (resultado == null)
+                if (resultado == null || resultado == DBNull.Value)
                 {
-                    throw new Exception(
-                        "No existe configuración de consulta para el tipo: "
-                        + tipo);
+                    throw new Exception($"No existe configuración de consulta para el RFC: {rfc} y el tipo: {tipo}");
                 }
 
                 return Convert.ToDateTime(resultado);
+            }
+        }
+        public static void ActualizarUltimaConsultaPorRfc(string rfc, string tipo, DateTime nuevaFecha)
+        {
+            string query = @"
+        UPDATE ControlConsultasSAT 
+        SET ultimaConsulta = @ultimaConsulta 
+        WHERE RFC = @rfc AND tipo = @tipo;
+    ";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc;
+                cmd.Parameters.Add("@tipo", SqlDbType.VarChar, 15).Value = tipo;
+                cmd.Parameters.Add("@ultimaConsulta", SqlDbType.DateTime).Value = nuevaFecha;
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
 

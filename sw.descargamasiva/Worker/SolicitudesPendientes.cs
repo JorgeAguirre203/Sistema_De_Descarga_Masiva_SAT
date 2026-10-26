@@ -3,10 +3,7 @@ using sw.descargamasiva.InsertarBD;
 using sw.descargamasiva.SAT;
 using sw.descargamasiva.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,35 +16,28 @@ namespace sw.descargamasiva.Worker
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
-                X509Certificate2 certificate =
-                    Generadorpfx.Cargar();
-
-
-                if (certificate == null)
-                {
-                    Console.WriteLine(
-                        "No se pudo cargar el certificado.");
-
-                    throw new InvalidOperationException("No se pudo cargar el certificado.");
-                }
-
-
-                CrearAutorizacionSAT autenticacion =
-                    new CrearAutorizacionSAT(certificate);
-
-
                 while (!stoppingToken.IsCancellationRequested)
                 {
+                    X509Certificate2 certificate = null;
+
                     try
-
-
-
-
                     {
                         await Task.Delay(
                             TimeSpan.FromHours(12),
                             stoppingToken);
 
+
+                        // La FIEL sale de ControlRFCSAT. Se carga en cada
+                        // vuelta; si falla, solo se registra el error y
+                        // se reintenta en la siguiente vuelta.
+                        string rfcFiel =
+                            Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE");
+
+                        certificate =
+                            Generadorpfx.Cargar(rfcFiel);
+
+                        CrearAutorizacionSAT autenticacion =
+                            new CrearAutorizacionSAT(certificate);
 
                         string authorization =
                             autenticacion.Obtener();
@@ -56,6 +46,12 @@ namespace sw.descargamasiva.Worker
                         InsertarRevisarBD.ProcesarSolicitudesPendientes(
                             certificate,
                             authorization);
+                    }
+                    catch (OperationCanceledException)
+                        when (stoppingToken.IsCancellationRequested)
+                    {
+                        // El servicio se está deteniendo.
+                        break;
                     }
                     catch (Exception ex)
                     {
@@ -66,6 +62,14 @@ namespace sw.descargamasiva.Worker
 
                         Console.WriteLine(
                             ex.Message);
+                    }
+                    finally
+                    {
+                        // Libera la llave privada de la FIEL.
+                        if (certificate != null)
+                        {
+                            certificate.Dispose();
+                        }
                     }
                 }
             }

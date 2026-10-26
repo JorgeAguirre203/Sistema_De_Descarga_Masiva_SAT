@@ -15,56 +15,38 @@ namespace sw.descargamasiva
     class Program
     {
         // Nombre con el que se registra en services.msc
-        public const string NombreServicio = "DescargaMasivaSAT";
-
-        static async Task Main(string[] args)
-        {
-           
-            if (!Environment.UserInteractive)
-                LogArchivo.Iniciar();
-
-            Console.WriteLine("====================================");
-            Console.WriteLine("      DESCARGA MASIVA SAT");
-            Console.WriteLine("====================================");
-
-            try
+       
+       
+            static void Main(string[] args)
             {
-               
-                var builder = Host.CreateApplicationBuilder(
-                    new HostApplicationBuilderSettings
-                    {
-                        Args = args,
-                        ContentRootPath = AppContext.BaseDirectory
-                    });
+                Console.WriteLine("====================================");
+                Console.WriteLine("      DESCARGA MASIVA SAT           ");
+                Console.WriteLine("====================================");
 
-               
-                builder.Services.AddWindowsService(opciones =>
+                try
                 {
-                    opciones.ServiceName = NombreServicio;
-                });
-                builder.Services.AddHostedService<VigenciaFacturasWorker>();
-                builder.Services.AddHostedService<PrimerProcesoWorker>();    // revisa pendientes y descarga
-                builder.Services.AddHostedService<segundoprocesoworker>();   // solicita al SAT y guarda
-               
+                    // 1. Instanciamos la clase Orquestador
+                    Orquestador orquestador = new Orquestador();
 
-                var host = builder.Build();
+                    // 2. Llamamos al método para que comience todo el flujo
+                    orquestador.OrquestarPrograma();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\nOcurrió un error crítico en el proceso: {ex.Message}");
+                }
 
-                await host.RunAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine();
-                Console.WriteLine("EL SERVICIO SE DETUVO POR UN ERROR:");
-                Console.WriteLine(ex.ToString());
-
-            
-                throw;
+                Console.WriteLine("\nProceso terminado.");
+                Console.WriteLine("Presione cualquier tecla para salir...");
+                Console.ReadKey();
             }
 
-            Console.WriteLine("Proceso terminado.");
-        }
+            // Aquí se mantienen tus métodos auxiliares de Program.cs (como ObtenerAuthorization, etc.)
+           
+        
+    
 
-        public static string ObtenerAuthorization(X509Certificate2 certificate)
+    public static string ObtenerAuthorization(X509Certificate2 certificate)
         {
             string token = ObToken.ObtenerToken(certificate);
 

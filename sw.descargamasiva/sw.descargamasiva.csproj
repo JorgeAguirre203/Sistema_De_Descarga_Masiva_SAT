@@ -225,10 +225,10 @@
     <Compile Include="SAT\SoapRequestBase.cs" />
     <Compile Include="Services\CfdiPendiente.cs" />
     <Compile Include="Services\Estadocfdi.cs" />
-    <Compile Include="Services\GenerarSolicEmit.cs" />
     <Compile Include="Services\GuardaryDescomprimirPQ.cs" />
     <Compile Include="Services\LogArchivo.cs" />
     <Compile Include="Services\ObToken.cs" />
+    <Compile Include="Services\Orquestador.cs" />
     <Compile Include="Services\SolicDescarga.cs" />
     <Compile Include="Services\SolicitudPendiente.cs" />
     <Compile Include="Services\validsolicitud.cs" />

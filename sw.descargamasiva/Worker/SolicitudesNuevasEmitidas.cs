@@ -1,15 +1,12 @@
 ﻿using Microsoft.Extensions.Hosting;
 using sw.descargamasiva.InsertarBD;
+using sw.descargamasiva.SAT;
 using sw.descargamasiva.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using sw.descargamasiva.SAT;
 
 namespace sw.descargamasiva.Worker
 {
@@ -27,28 +24,10 @@ namespace sw.descargamasiva.Worker
                 ServicePointManager.Expect100Continue =
                     false;
 
-
-
-                X509Certificate2 certificate =
-                 Generadorpfx.Cargar();
-
-                if (certificate == null)
-                {
-                    Console.WriteLine(
-                        "No se pudo cargar el certificado.");
-
-                    throw new InvalidOperationException("No se pudo cargar el certificado.");
-                }
-
-
-
-                CrearAutorizacionSAT autenticacion =
-                    new CrearAutorizacionSAT(certificate);
-
-
-
                 while (!stoppingToken.IsCancellationRequested)
                 {
+                    X509Certificate2 certificate = null;
+
                     try
                     {
                         Console.WriteLine();
@@ -62,17 +41,22 @@ namespace sw.descargamasiva.Worker
                             "====================================");
 
 
+                        // La FIEL sale de ControlRFCSAT.
+                        string rfcFiel =
+                            Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE");
+
+                        certificate =
+                            Generadorpfx.Cargar(rfcFiel);
+
+                        CrearAutorizacionSAT autenticacion =
+                            new CrearAutorizacionSAT(certificate);
 
                         string authorization =
                             autenticacion.Obtener();
 
 
-
-
                         DateTime fechaInicial;
                         DateTime fechaFinal;
-
-
 
 
                         string idSolicitud =
@@ -94,7 +78,6 @@ namespace sw.descargamasiva.Worker
                             idSolicitud);
 
 
-
                         int idSolicitudBD =
                             Guardarenbased.GuardarSolicitudEnBD(
                                 idSolicitud,
@@ -113,8 +96,6 @@ namespace sw.descargamasiva.Worker
                             idSolicitudBD);
 
 
-
-
                         InsertarRevisarBD.RevisarYDescargarSolicitud(
                             certificate,
                             authorization,
@@ -131,8 +112,14 @@ namespace sw.descargamasiva.Worker
                         Console.WriteLine(
                             ex.Message);
                     }
-
-
+                    finally
+                    {
+                        // Libera la llave privada de la FIEL.
+                        if (certificate != null)
+                        {
+                            certificate.Dispose();
+                        }
+                    }
 
 
                     await Task.Delay(
@@ -142,11 +129,5 @@ namespace sw.descargamasiva.Worker
             }
         }
 
-
     }
-
-   
-
-
-   
 }
