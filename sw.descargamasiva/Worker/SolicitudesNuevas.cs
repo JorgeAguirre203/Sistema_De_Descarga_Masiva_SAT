@@ -67,7 +67,7 @@ namespace sw.descargamasiva.Worker
 
                             string idSolicitud =
                                 GenerarSolici.GenerarSolicitudRecibidos(
-                                    rfc,                 // <-- argumento que faltaba (CS7036)
+                                    rfc,                   
                                     certificate,
                                     authorization,
                                     out fechaInicial,

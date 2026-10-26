@@ -37,7 +37,7 @@ namespace sw.descargamasiva.InsertarBD
 
             Console.WriteLine(idSolicitud);
 
-            VerificaSolicitud resultado = validsolicitud.ValidarSolicitud(      //se obtiene resultado (xml de salida del sat) el cual contiene la informacion denuetsra peticion al sat
+            VerificaSolicitud resultado = Orquestador.ValidarSolicitud(      //se obtiene resultado (xml de salida del sat) el cual contiene la informacion denuetsra peticion al sat
                 certificate,
                 authorization,
                 idSolicitud);
@@ -243,7 +243,7 @@ namespace sw.descargamasiva.InsertarBD
                 {
                     // Preguntar al SAT el estado actual
                     VerificaSolicitud resultado =
-                        validsolicitud.ValidarSolicitud(
+                        Orquestador.ValidarSolicitud(
                             certificate,
                             authorization,
                             solicitud.IdSolicitudSat);

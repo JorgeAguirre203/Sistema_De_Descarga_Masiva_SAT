@@ -13,6 +13,10 @@ namespace sw.descargamasiva.Services
 {
     internal class Orquestador
     {
+        static string urlVerificarSolicitud = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/VerificaSolicitudDescargaService.svc";
+        static string urlVerificarSolicitudAction = "http://DescargaMasivaTerceros.sat.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga";
+
+
         public void OrquestarPrograma()
         {
             List<string> listaRfcs = ProcesadorRFC.ExtraerRFC();
@@ -41,15 +45,16 @@ namespace sw.descargamasiva.Services
                         string RfcSolicitante;
 
                         string idSolicitud = GenerarSolici.GenerarSolicitudRecibidos(
-    rfc,
-    certificado,
-    authorization,
-    out fechaInicial,
-    out fechaFinal,
-    out RfcReceptor,
-    out RfcEmisor,
-    out RfcSolicitante);
+                             rfc,
+                             certificado,
+                             authorization,
+                             out fechaInicial,
+                             out fechaFinal,
+                             out RfcReceptor,
+                             out RfcEmisor,
+                             out RfcSolicitante);
 
+                      
                         if (string.IsNullOrEmpty(idSolicitud))
                         {
                             Console.WriteLine($"[AVISO] No se generó ID de solicitud para el RFC {rfc}. Pasando al siguiente.");
@@ -58,6 +63,19 @@ namespace sw.descargamasiva.Services
 
                         Console.WriteLine("\nID SOLICITUD RECIBIDOS:");
                         Console.WriteLine(idSolicitud);
+
+                        VerificaSolicitud verifica =
+               new VerificaSolicitud(
+                   urlVerificarSolicitud,
+                   urlVerificarSolicitudAction);
+
+                        string xmlVerifica =
+                            verifica.Generate(
+                                certificado,
+                                rfc,
+                                idSolicitud);
+
+
 
                         int idSolicitudBD = Guardarenbased.GuardarSolicitudEnBD(
                             idSolicitud,
@@ -82,9 +100,42 @@ namespace sw.descargamasiva.Services
                 }
             }
         }
-    }
 
-    internal class ProcesadorRFC
+        public static VerificaSolicitud ValidarSolicitud(
+               X509Certificate2 certificate,
+               string authorization,
+               string idSolicitud)
+        {
+            VerificaSolicitud verifica =
+                new VerificaSolicitud(
+                    urlVerificarSolicitud,
+                    urlVerificarSolicitudAction);
+
+            string xmlVerifica =
+                verifica.Generate(
+                    certificate,
+                    Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE"),
+                    idSolicitud);
+
+            Console.WriteLine();
+            Console.WriteLine(
+                "======= XML VERIFICACIÓN =======");
+
+            Console.WriteLine(xmlVerifica);
+
+            Console.WriteLine(
+                "================================");
+
+
+
+            verifica.Send(authorization);
+
+            return verifica;
+        }
+    }
+}
+
+internal class ProcesadorRFC
     {
         public static List<string> ExtraerRFC()
         {
@@ -114,4 +165,5 @@ namespace sw.descargamasiva.Services
             return rfcList;
         }
     }
-}
+
+

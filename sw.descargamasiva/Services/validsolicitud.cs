@@ -1,14 +1,5 @@
-﻿using sw.descargamasiva.InsertarBD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using sw.descargamasiva.SAT;
-using sw.descargamasiva.Services;
-using sw.descargamasiva.Worker;
-
 
 namespace sw.descargamasiva.Services
 {
@@ -16,32 +7,30 @@ namespace sw.descargamasiva.Services
     {
         static string urlVerificarSolicitud = "https://cfdidescargamasivasolicitud.clouda.sat.gob.mx/VerificaSolicitudDescargaService.svc";
         static string urlVerificarSolicitudAction = "http://DescargaMasivaTerceros.sat.gob.mx/IVerificaSolicitudDescargaService/VerificaSolicitudDescarga";
+
+        // Agregamos 'string rfcSolicitante' como parámetro
         public static VerificaSolicitud ValidarSolicitud(
             X509Certificate2 certificate,
             string authorization,
-            string idSolicitud)
+            string idSolicitud,
+            string rfcSolicitante)
         {
             VerificaSolicitud verifica =
                 new VerificaSolicitud(
                     urlVerificarSolicitud,
                     urlVerificarSolicitudAction);
 
+            // Usamos el parámetro que recibimos en lugar de la consulta a la BD
             string xmlVerifica =
                 verifica.Generate(
                     certificate,
-                    Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE"),
+                    rfcSolicitante,
                     idSolicitud);
 
             Console.WriteLine();
-            Console.WriteLine(
-                "======= XML VERIFICACIÓN =======");
-
+            Console.WriteLine("======= XML VERIFICACIÓN =======");
             Console.WriteLine(xmlVerifica);
-
-            Console.WriteLine(
-                "================================");
-
-
+            Console.WriteLine("================================");
 
             verifica.Send(authorization);
 

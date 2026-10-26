@@ -13,5 +13,6 @@ namespace sw.descargamasiva.InsertarBD
         public string IdSolicitudSat { get; set; }
 
         public string Tipo { get; set; }
+        public string RFC { get; set; }
     }
 }

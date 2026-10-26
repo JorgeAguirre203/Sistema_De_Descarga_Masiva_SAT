@@ -42,10 +42,14 @@ namespace sw.descargamasiva.Worker
                         string authorization =
                             autenticacion.Obtener();
 
+                       
+                           
+
 
                         InsertarRevisarBD.ProcesarSolicitudesPendientes(
                             certificate,
-                            authorization);
+                            authorization
+                          );
                     }
                     catch (OperationCanceledException)
                         when (stoppingToken.IsCancellationRequested)

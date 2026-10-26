@@ -235,8 +235,8 @@
     <Compile Include="Services\validsolicitud.cs" />
     <Compile Include="Services\GenerarSolici.cs" />
     <Compile Include="Services\Generadorpfx.cs" />
-    <Compile Include="Worker\SolicitudesNuevasEmitidas.cs" />
     <Compile Include="Worker\SolicitudesNuevas.cs" />
+    <Compile Include="Worker\SolicitudesNuevasEmitidas.cs" />
     <Compile Include="Worker\SolicitudesPendientes.cs" />
     <Compile Include="Worker\VigenciaDeFacturas.cs" />
   </ItemGroup>
