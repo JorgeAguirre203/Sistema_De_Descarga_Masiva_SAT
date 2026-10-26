@@ -3,6 +3,7 @@ using sw.descargamasiva.InsertarBD;
 using sw.descargamasiva.SAT;
 using sw.descargamasiva.Services;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
@@ -17,124 +18,103 @@ namespace sw.descargamasiva.Worker
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
-                ServicePointManager.SecurityProtocol =
-                    SecurityProtocolType.Tls12;
-
-                ServicePointManager.Expect100Continue =
-                    false;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.Expect100Continue = false;
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    X509Certificate2 certificate = null;
+                    Console.WriteLine();
+                    Console.WriteLine("====================================");
+                    Console.WriteLine("SOLICITUD DE CFDI RECIBIDOS");
+                    Console.WriteLine("====================================");
+
+                    List<string> rfcs;
 
                     try
                     {
-                        Console.WriteLine();
-                        Console.WriteLine(
-                            "====================================");
-
-                        Console.WriteLine(
-                            "SOLICITUD DE CFDI RECIBIDOS");
-
-                        Console.WriteLine(
-                            "====================================");
-
-
-                        // La FIEL sale de ControlRFCSAT. Se carga en cada
-                        // vuelta: si cambias la FIEL en la BD, se usa sin
-                        // reiniciar. Si falla, solo se registra el error
-                        // y se reintenta en la siguiente vuelta (ya no
-                        // detiene todo el servicio).
-                        string rfcFiel =
-                            Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE");
-
-                        certificate =
-                            Generadorpfx.Cargar(rfcFiel);
-
-                        CrearAutorizacionSAT autenticacion =
-                            new CrearAutorizacionSAT(certificate);
-
-                        string authorization =
-                            autenticacion.Obtener();
-
-
-                        DateTime fechaInicial;
-                        DateTime fechaFinal;
-                        string RfcReceptor;
-                        string RfcEmisor;
-                        string RfcSolicitante;
-
-
-                        string idSolicitud =
-                            GenerarSolici.GenerarSolicitudRecibidos(
-                                certificate,
-                                authorization,
-
-                                out fechaInicial,
-                                out fechaFinal,
-                                out RfcReceptor,
-                                out RfcEmisor,
-                                out RfcSolicitante);
-
-
-                        Console.WriteLine();
-                        Console.WriteLine(
-                            "ID SOLICITUD RECIBIDOS:");
-
-                        Console.WriteLine(
-                            idSolicitud);
-
-
-                        int idSolicitudBD =
-                            Guardarenbased.GuardarSolicitudEnBD(
-                                idSolicitud,
-                                "RECIBIDO",
-                                fechaInicial,
-                                fechaFinal);
-
-
-                        Console.WriteLine();
-
-                        Console.WriteLine(
-                            "Solicitud registrada en BD.");
-
-                        Console.WriteLine(
-                            "ID interno: " +
-                            idSolicitudBD);
-
-
-                        InsertarRevisarBD.RevisarYDescargarSolicitud(
-                            certificate,
-                            authorization,
-                            idSolicitud,
-                            "RECIBIDO");
+                        rfcs = ProcesadorRFC.ExtraerRFC();
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine();
-
-                        Console.WriteLine(
-                            "ERROR EN EL PROCESO:");
-
-                        Console.WriteLine(
-                            ex.Message);
+                        Console.WriteLine("ERROR leyendo RFCs activos: " + ex.Message);
+                        rfcs = new List<string>();
                     }
-                    finally
+
+                    // Un RFC con error no detiene a los demás.
+                    foreach (string rfc in rfcs)
                     {
-                        // Libera la llave privada de la FIEL.
-                        if (certificate != null)
+                        if (stoppingToken.IsCancellationRequested) break;
+
+                        X509Certificate2 certificate = null;
+
+                        try
                         {
-                            certificate.Dispose();
+                            Console.WriteLine();
+                            Console.WriteLine("RFC: " + rfc);
+
+                            certificate = Generadorpfx.Cargar(rfc);
+
+                            CrearAutorizacionSAT autenticacion =
+                                new CrearAutorizacionSAT(certificate);
+
+                            string authorization = autenticacion.Obtener();
+
+                            DateTime fechaInicial;
+                            DateTime fechaFinal;
+                            string RfcReceptor;
+                            string RfcEmisor;
+                            string RfcSolicitante;
+
+                            string idSolicitud =
+                                GenerarSolici.GenerarSolicitudRecibidos(
+                                    rfc,                 // <-- argumento que faltaba (CS7036)
+                                    certificate,
+                                    authorization,
+                                    out fechaInicial,
+                                    out fechaFinal,
+                                    out RfcReceptor,
+                                    out RfcEmisor,
+                                    out RfcSolicitante);
+
+                            Console.WriteLine();
+                            Console.WriteLine("ID SOLICITUD RECIBIDOS:");
+                            Console.WriteLine(idSolicitud);
+
+                            int idSolicitudBD =
+                                Guardarenbased.GuardarSolicitudEnBD(
+                                    idSolicitud,
+                                    "RECIBIDO",
+                                    fechaInicial,
+                                    fechaFinal);
+
+                            Console.WriteLine();
+                            Console.WriteLine("Solicitud registrada en BD.");
+                            Console.WriteLine("ID interno: " + idSolicitudBD);
+
+                            InsertarRevisarBD.RevisarYDescargarSolicitud(
+                                certificate,
+                                authorization,
+                                idSolicitud,
+                                "RECIBIDO");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("ERROR EN EL PROCESO (RFC " + rfc + "):");
+                            Console.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            if (certificate != null)
+                            {
+                                certificate.Dispose();
+                            }
                         }
                     }
 
-
-                    await Task.Delay(
-                        TimeSpan.FromHours(12),
-                        stoppingToken);
+                    await Task.Delay(TimeSpan.FromHours(12), stoppingToken);
                 }
             }
         }
-
     }
 }

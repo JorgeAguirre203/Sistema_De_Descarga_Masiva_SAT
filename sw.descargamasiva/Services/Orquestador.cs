@@ -40,15 +40,15 @@ namespace sw.descargamasiva.Services
                         string RfcEmisor;
                         string RfcSolicitante;
 
-                        // Nota: Asegúrate de pasar el 'rfc' actual si tu método lo requiere para armar la solicitud
                         string idSolicitud = GenerarSolici.GenerarSolicitudRecibidos(
-                            certificado,
-                            authorization,
-                            out fechaInicial,
-                            out fechaFinal,
-                            out RfcReceptor,
-                            out RfcEmisor,
-                            out RfcSolicitante);
+    rfc,
+    certificado,
+    authorization,
+    out fechaInicial,
+    out fechaFinal,
+    out RfcReceptor,
+    out RfcEmisor,
+    out RfcSolicitante);
 
                         if (string.IsNullOrEmpty(idSolicitud))
                         {

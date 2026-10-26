@@ -92,15 +92,14 @@ namespace sw.descargamasiva.InsertarBD
         public static DateTime ObtenerUltimaConsultaPorRfc(string rfc, string tipo)
         {
             string query = @"
-        SELECT ultimaConsulta 
-        FROM ControlConsultasSAT 
-        WHERE RFC = @rfc AND tipo = @tipo;
-    ";
+        SELECT UltimaConsulta
+        FROM dbo.ControlConsultasPorRFC
+        WHERE RFC = @rfc AND tipo = @tipo;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc;
+                cmd.Parameters.Add("@rfc", SqlDbType.NVarChar, 15).Value = rfc;
                 cmd.Parameters.Add("@tipo", SqlDbType.VarChar, 15).Value = tipo;
 
                 conn.Open();
@@ -109,7 +108,8 @@ namespace sw.descargamasiva.InsertarBD
 
                 if (resultado == null || resultado == DBNull.Value)
                 {
-                    throw new Exception($"No existe configuración de consulta para el RFC: {rfc} y el tipo: {tipo}");
+                    throw new Exception(
+                        $"No existe configuración de consulta para el RFC: {rfc} y el tipo: {tipo}");
                 }
 
                 return Convert.ToDateTime(resultado);
@@ -118,9 +118,9 @@ namespace sw.descargamasiva.InsertarBD
         public static void ActualizarUltimaConsultaPorRfc(string rfc, string tipo, DateTime nuevaFecha)
         {
             string query = @"
-        UPDATE ControlConsultasSAT 
-        SET ultimaConsulta = @ultimaConsulta 
-        WHERE RFC = @rfc AND tipo = @tipo;
+        UPDATE dbo.ControlConsultasPorRFC 
+        SET UltimaConsulta = @UltimaConsulta 
+        WHERE RFC = @RFC   AND tipo = @tipo;
     ";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
