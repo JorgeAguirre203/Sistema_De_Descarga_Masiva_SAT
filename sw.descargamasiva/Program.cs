@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using sw.descargamasiva.Services;
-using sw.descargamasiva.Worker;
 using System;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using System.Web;
 using static sw.descargamasiva.Worker.SolicitudesNuevasEmitidas;
 using static sw.descargamasiva.Worker.SolicitudesNuevas;
@@ -14,22 +13,17 @@ namespace sw.descargamasiva
 {
     class Program
     {
-        // Nombre con el que se registra en services.msc
-       
-       
-            static void Main(string[] args)
-            {
-                Console.WriteLine("====================================");
-                Console.WriteLine("      DESCARGA MASIVA SAT           ");
-                Console.WriteLine("====================================");
+        static void Main(string[] args)
+        {
+            Console.WriteLine("====================================");
+            Console.WriteLine("      DESCARGA MASIVA SAT           ");
+            Console.WriteLine("====================================");
 
+            if (args.Contains("--una-vez"))
+            {
                 try
                 {
-                    // 1. Instanciamos la clase Orquestador
-                    Orquestador orquestador = new Orquestador();
-
-                    // 2. Llamamos al método para que comience todo el flujo
-                    orquestador.OrquestarPrograma();
+                    new Orquestador().OrquestarPrograma();
                 }
                 catch (Exception ex)
                 {
@@ -39,14 +33,23 @@ namespace sw.descargamasiva
                 Console.WriteLine("\nProceso terminado.");
                 Console.WriteLine("Presione cualquier tecla para salir...");
                 Console.ReadKey();
+                return;
             }
 
-            // Aquí se mantienen tus métodos auxiliares de Program.cs (como ObtenerAuthorization, etc.)
-           
-        
-    
+            Host.CreateDefaultBuilder(args)
+                .UseWindowsService()
+                .ConfigureServices(services =>
+                {
+                    services.AddHostedService<segundoprocesoworker>();   // CFDI recibidos
+                   //services.AddHostedService<tercerprocesoworker>();    // CFDI emitidos
+                    services.AddHostedService<PrimerProcesoWorker>();    // solicitudes pendientes
+                    services.AddHostedService<VigenciaFacturasWorker>(); // vigencia de CFDI
+                })
+                .Build()
+                .Run();
+        }
 
-    public static string ObtenerAuthorization(X509Certificate2 certificate)
+        public static string ObtenerAuthorization(X509Certificate2 certificate)
         {
             string token = ObToken.ObtenerToken(certificate);
 

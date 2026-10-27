@@ -22,7 +22,22 @@ namespace sw.descargamasiva.Services
         {
             // Última consulta de ESTE rfc y tipo EMITIDO
             fechaInicial = Guardarenbased.ObtenerUltimaConsultaPorRfc(rfcActual, "EMITIDO");
+
+            // No pedir el presente ni el futuro: se deja 1 hora de margen y,
+            // ya al día, se espera a juntar al menos 6 horas antes de pedir.
+            DateTime limite = DateTime.Now.AddHours(-1);
+
+            if (limite - fechaInicial < TimeSpan.FromHours(6))
+            {
+                fechaFinal = fechaInicial;
+                Console.WriteLine($"RFC {rfcActual} (EMITIDOS) al día. Última consulta: {fechaInicial:yyyy-MM-dd HH:mm:ss}");
+                return null;
+            }
+
             fechaFinal = fechaInicial.AddHours(24);
+
+            if (fechaFinal > limite)
+                fechaFinal = limite;
 
             Console.WriteLine();
             Console.WriteLine("Periodo que se solicitará al SAT (EMITIDOS):");

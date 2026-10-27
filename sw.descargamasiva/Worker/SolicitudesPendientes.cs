@@ -3,6 +3,7 @@ using sw.descargamasiva.InsertarBD;
 using sw.descargamasiva.SAT;
 using sw.descargamasiva.Services;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,67 +14,77 @@ namespace sw.descargamasiva.Worker
     {
         public class PrimerProcesoWorker : BackgroundService
         {
+            // Cada cuánto se revisan las solicitudes pendientes de todos los RFC.
+            private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(15);
+
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    X509Certificate2 certificate = null;
+                    List<string> rfcs;
 
                     try
                     {
-                        await Task.Delay(
-                            TimeSpan.FromHours(12),
-                            stoppingToken);
+                        rfcs = ProcesadorRFC.ExtraerRFC();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("ERROR leyendo RFCs activos: " + ex.Message);
+                        rfcs = new List<string>();
+                    }
 
+                    // Cada RFC revisa SUS pendientes con SU FIEL.
+                    foreach (string rfc in rfcs)
+                    {
+                        if (stoppingToken.IsCancellationRequested) break;
 
-                        // La FIEL sale de ControlRFCSAT. Se carga en cada
-                        // vuelta; si falla, solo se registra el error y
-                        // se reintenta en la siguiente vuelta.
-                        string rfcFiel =
-                            Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE");
+                        X509Certificate2 certificate = null;
 
-                        certificate =
-                            Generadorpfx.Cargar(rfcFiel);
+                        try
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Pendientes del RFC: " + rfc);
 
-                        CrearAutorizacionSAT autenticacion =
-                            new CrearAutorizacionSAT(certificate);
+                            certificate =
+                                Generadorpfx.Cargar(rfc);
 
-                        string authorization =
-                            autenticacion.Obtener();
+                            CrearAutorizacionSAT autenticacion =
+                                new CrearAutorizacionSAT(certificate);
 
-                       
-                           
+                            string authorization =
+                                autenticacion.Obtener();
 
+                            InsertarRevisarBD.ProcesarSolicitudesPendientes(
+                                certificate,
+                                authorization);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine(
+                                "ERROR PROCESANDO SOLICITUDES (RFC " + rfc + "):");
+                            Console.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            // Libera la llave privada de la FIEL.
+                            if (certificate != null)
+                            {
+                                certificate.Dispose();
+                            }
+                        }
+                    }
 
-                        InsertarRevisarBD.ProcesarSolicitudesPendientes(
-                            certificate,
-                            authorization
-                          );
+                    try
+                    {
+                        await Task.Delay(Intervalo, stoppingToken);
                     }
                     catch (OperationCanceledException)
                         when (stoppingToken.IsCancellationRequested)
                     {
                         // El servicio se está deteniendo.
                         break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine();
-
-                        Console.WriteLine(
-                            "ERROR PROCESANDO SOLICITUDES:");
-
-                        Console.WriteLine(
-                            ex.Message);
-                    }
-                    finally
-                    {
-                        // Libera la llave privada de la FIEL.
-                        if (certificate != null)
-                        {
-                            certificate.Dispose();
-                        }
                     }
                 }
             }

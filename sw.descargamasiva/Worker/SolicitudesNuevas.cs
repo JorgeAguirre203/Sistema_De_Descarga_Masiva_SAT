@@ -15,6 +15,9 @@ namespace sw.descargamasiva.Worker
     {
         public class segundoprocesoworker : BackgroundService
         {
+            // Cada cuánto se piden CFDI nuevos para todos los RFC.
+            private static readonly TimeSpan Intervalo = TimeSpan.FromSeconds(30);
+
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
@@ -67,7 +70,7 @@ namespace sw.descargamasiva.Worker
 
                             string idSolicitud =
                                 GenerarSolici.GenerarSolicitudRecibidos(
-                                    rfc,                   
+                                    rfc,
                                     certificate,
                                     authorization,
                                     out fechaInicial,
@@ -75,6 +78,10 @@ namespace sw.descargamasiva.Worker
                                     out RfcReceptor,
                                     out RfcEmisor,
                                     out RfcSolicitante);
+
+                            // null = el RFC ya está al día, no se pidió nada
+                            if (string.IsNullOrEmpty(idSolicitud))
+                                continue;
 
                             Console.WriteLine();
                             Console.WriteLine("ID SOLICITUD RECIBIDOS:");
@@ -85,7 +92,8 @@ namespace sw.descargamasiva.Worker
                                     idSolicitud,
                                     "RECIBIDO",
                                     fechaInicial,
-                                    fechaFinal);
+                                    fechaFinal,
+                                    rfc);
 
                             Console.WriteLine();
                             Console.WriteLine("Solicitud registrada en BD.");
@@ -112,7 +120,7 @@ namespace sw.descargamasiva.Worker
                         }
                     }
 
-                    await Task.Delay(TimeSpan.FromHours(12), stoppingToken);
+                    await Task.Delay(Intervalo, stoppingToken);
                 }
             }
         }

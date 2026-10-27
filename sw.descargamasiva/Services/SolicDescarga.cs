@@ -17,11 +17,7 @@ namespace sw.descargamasiva.Services
    string authorization,
    string idPaquete)
         {
-            if (string.IsNullOrWhiteSpace(Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE")))
-            {
-                throw new Exception(
-                    "El RFC solicitante está vacío.");
-            }
+            string rfcSolicitante = CertificadoRfc.Obtener(certificate);
 
             if (string.IsNullOrWhiteSpace(idPaquete))
             {
@@ -37,7 +33,7 @@ namespace sw.descargamasiva.Services
 
             descargarSolicitud.Generate(
                 certificate,
-               Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE"),
+                rfcSolicitante,
                 idPaquete);
 
             return descargarSolicitud.Send(

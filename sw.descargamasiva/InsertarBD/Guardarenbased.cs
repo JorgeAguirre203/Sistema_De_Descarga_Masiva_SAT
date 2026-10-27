@@ -14,7 +14,8 @@ namespace sw.descargamasiva.InsertarBD
             string idSolicitudSat,
             string tipo,
             DateTime fechaInicial,
-            DateTime fechaFinal)
+            DateTime fechaFinal,
+            string rfc)
         {
             string query = @"
                 IF EXISTS
@@ -39,7 +40,8 @@ namespace sw.descargamasiva.InsertarBD
                         tipo,
                         fechainicial,
                         fechafinal,
-                        estado
+                        estado,
+                        RFC
                     )
                     VALUES
                     (
@@ -47,7 +49,8 @@ namespace sw.descargamasiva.InsertarBD
                         @tipo,
                         @fechainicial,
                         @fechafinal,
-                        0
+                        0,
+                        @rfc
                     );
 
                     SELECT CAST(SCOPE_IDENTITY() AS INT);
@@ -77,6 +80,11 @@ namespace sw.descargamasiva.InsertarBD
                 cmd.Parameters.Add(
                     "@fechafinal",
                     SqlDbType.DateTime2).Value = fechaFinal;
+
+                cmd.Parameters.Add(
+                    "@rfc",
+                    SqlDbType.NVarChar,
+                    15).Value = rfc;
 
                 conn.Open();
 
@@ -141,12 +149,12 @@ namespace sw.descargamasiva.InsertarBD
             string query = @"
                 SELECT RFC
                 FROM ControlRFCSAT
-                WHERE tipo = @tipo;";         
+                WHERE tipo = @tipo;";
 
             using (SqlConnection conn =
                 new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
-            { 
+            {
                 cmd.Parameters.Add(
                     "@tipo",
                     SqlDbType.VarChar,
@@ -157,14 +165,15 @@ namespace sw.descargamasiva.InsertarBD
                 object resultado =
                     cmd.ExecuteScalar();
 
-                if (resultado == null) {
+                if (resultado == null)
+                {
 
                     throw new Exception("No existe un rfc registrado" + tipo);
 
                 }
                 return resultado.ToString().Trim();
 
-                  
+
             }
         }
 

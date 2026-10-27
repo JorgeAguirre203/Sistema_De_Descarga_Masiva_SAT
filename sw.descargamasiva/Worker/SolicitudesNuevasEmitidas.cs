@@ -15,6 +15,9 @@ namespace sw.descargamasiva.Worker
     {
         public class tercerprocesoworker : BackgroundService
         {
+            // Cada cuánto se piden CFDI nuevos para todos los RFC.
+            private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(30);
+
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
@@ -70,6 +73,10 @@ namespace sw.descargamasiva.Worker
                                     out fechaInicial,
                                     out fechaFinal);
 
+                            // null = el RFC ya está al día, no se pidió nada
+                            if (string.IsNullOrEmpty(idSolicitud))
+                                continue;
+
                             Console.WriteLine();
                             Console.WriteLine("ID SOLICITUD EMITIDOS:");
                             Console.WriteLine(idSolicitud);
@@ -79,7 +86,8 @@ namespace sw.descargamasiva.Worker
                                     idSolicitud,
                                     "EMITIDO",
                                     fechaInicial,
-                                    fechaFinal);
+                                    fechaFinal,
+                                    rfc);
 
                             Console.WriteLine();
                             Console.WriteLine("Solicitud registrada en BD.");
@@ -106,7 +114,7 @@ namespace sw.descargamasiva.Worker
                         }
                     }
 
-                    await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+                    await Task.Delay(Intervalo, stoppingToken);
                 }
             }
         }

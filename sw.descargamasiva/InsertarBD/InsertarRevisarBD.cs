@@ -120,7 +120,8 @@ namespace sw.descargamasiva.InsertarBD
                         GuardaryDescomprimirPQ.GuardarSolicitud(
                             idPaquete,
                             descargaResponse,
-                            tipo);
+                            tipo,
+                            CertificadoRfc.Obtener(certificate));
 
 
                     ActualizarPQEnBD.ActualizarPaqueteEnBD(
@@ -152,7 +153,7 @@ namespace sw.descargamasiva.InsertarBD
             }
         }
 
-        public static List<SolicitudPendiente> ObtenerSolicitudesPendientes()
+        public static List<SolicitudPendiente> ObtenerSolicitudesPendientes(string rfc)
         {
             List<SolicitudPendiente> solicitudes =
                 new List<SolicitudPendiente>();
@@ -161,9 +162,11 @@ namespace sw.descargamasiva.InsertarBD
         SELECT
             id,
             idsolicitudsat,
-            tipo
+            tipo,
+            RFC
         FROM SolicitudesSAT
         WHERE estado IN (1, 2)
+          AND RFC = @rfc
           AND proximarevision IS NOT NULL
           AND proximarevision <= SYSDATETIME()
         ORDER BY proximarevision ASC;
@@ -174,6 +177,8 @@ namespace sw.descargamasiva.InsertarBD
             using (SqlCommand cmd =
                 new SqlCommand(query, conn))
             {
+                cmd.Parameters.Add("@rfc", SqlDbType.NVarChar, 15).Value = rfc;
+
                 conn.Open();
 
                 using (SqlDataReader reader =
@@ -193,6 +198,9 @@ namespace sw.descargamasiva.InsertarBD
                         solicitud.Tipo =
                             reader["tipo"].ToString();
 
+                        solicitud.RFC =
+                            reader["RFC"].ToString();
+
                         solicitudes.Add(solicitud);
                     }
                 }
@@ -204,8 +212,11 @@ namespace sw.descargamasiva.InsertarBD
     X509Certificate2 certificate,
     string authorization)
         {
+            // Solo las solicitudes del RFC dueño de este certificado
+            string rfc = CertificadoRfc.Obtener(certificate);
+
             List<SolicitudPendiente> solicitudes =
-                ObtenerSolicitudesPendientes();
+                ObtenerSolicitudesPendientes(rfc);
 
             if (solicitudes.Count == 0)
             {
@@ -339,7 +350,8 @@ namespace sw.descargamasiva.InsertarBD
                                 GuardaryDescomprimirPQ.GuardarSolicitud(
                                     idPaquete,
                                     descargaResponse,
-                                    solicitud.Tipo);
+                                    solicitud.Tipo,
+                                    rfc);
 
                             // Marcar paquete como descargado
                             ActualizarPQEnBD.ActualizarPaqueteEnBD(

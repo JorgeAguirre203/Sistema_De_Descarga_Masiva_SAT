@@ -19,11 +19,12 @@ namespace sw.descargamasiva.Services
                 AppDomain.CurrentDomain.BaseDirectory,
                 "Paquetes");
 
-     
+
         public static string GuardarSolicitud(
             string idPaquete,
             string descargaResponse,
-            string tipo)
+            string tipo,
+            string rfc)
         {
             string carpetaTipo =
                 Path.Combine(
@@ -31,7 +32,7 @@ namespace sw.descargamasiva.Services
                     LimpiarNombre(tipo));
 
             string rfcSolicitante =
-                LimpiarNombre(Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE"));
+                LimpiarNombre(rfc);
 
             if (string.IsNullOrWhiteSpace(rfcSolicitante))
                 rfcSolicitante = "SIN_RFC";
@@ -140,7 +141,7 @@ namespace sw.descargamasiva.Services
             }
             finally
             {
-               
+
                 try
                 {
                     if (Directory.Exists(carpetaTemp))
@@ -155,7 +156,7 @@ namespace sw.descargamasiva.Services
             }
         }
 
-       
+
         private class DatosCfdi
         {
             public string RfcReceptor = "SIN_RFC";

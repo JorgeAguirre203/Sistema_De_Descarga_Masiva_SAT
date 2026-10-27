@@ -54,7 +54,7 @@ namespace sw.descargamasiva.Services
                              out RfcEmisor,
                              out RfcSolicitante);
 
-                      
+
                         if (string.IsNullOrEmpty(idSolicitud))
                         {
                             Console.WriteLine($"[AVISO] No se generó ID de solicitud para el RFC {rfc}. Pasando al siguiente.");
@@ -81,7 +81,8 @@ namespace sw.descargamasiva.Services
                             idSolicitud,
                             "RECIBIDO",
                             fechaInicial,
-                            fechaFinal);
+                            fechaFinal,
+                            rfc);
 
                         Console.WriteLine("\nSolicitud registrada en BD.");
                         Console.WriteLine("ID interno: " + idSolicitudBD);
@@ -114,7 +115,7 @@ namespace sw.descargamasiva.Services
             string xmlVerifica =
                 verifica.Generate(
                     certificate,
-                    Guardarenbased.ObtenerRFCSOLIC("SOLICITANTE"),
+                    CertificadoRfc.Obtener(certificate),   // RFC del mismo certificado que firma
                     idSolicitud);
 
             Console.WriteLine();
@@ -135,35 +136,66 @@ namespace sw.descargamasiva.Services
     }
 }
 
-internal class ProcesadorRFC
+// Saca el RFC del certificado de la FIEL (campo OID 2.5.4.45 del Subject).
+// Así el RfcSolicitante siempre coincide con el sello y no hay error 303.
+internal static class CertificadoRfc
+{
+    public static string Obtener(X509Certificate2 certificado)
     {
-        public static List<string> ExtraerRFC()
+        if (certificado == null)
+            throw new ArgumentNullException(nameof(certificado));
+
+        const string oid = "2.5.4.45=";
+
+        foreach (string parte in certificado.Subject.Split(','))
         {
-            List<string> rfcList = new List<string>();
+            int i = parte.IndexOf(oid, StringComparison.Ordinal);
 
-            string query = "SELECT DISTINCT RFC FROM ControlRFCSAT WHERE Activo = 1;";
+            if (i < 0) continue;
 
-            using (SqlConnection conn = new SqlConnection(Guardarenbased.connectionString))
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            string valor = parte.Substring(i + oid.Length).Trim().Trim('"');
+
+            // Persona moral: "RFCEMPRESA / RFCREPRESENTANTE" -> se toma el primero
+            int barra = valor.IndexOf('/');
+            if (barra >= 0) valor = valor.Substring(0, barra);
+
+            valor = valor.Trim().ToUpperInvariant();
+
+            if (valor.Length > 0) return valor;
+        }
+
+        throw new InvalidOperationException(
+            "El certificado no contiene el RFC (OID 2.5.4.45): " + certificado.Subject);
+    }
+}
+
+internal class ProcesadorRFC
+{
+    public static List<string> ExtraerRFC()
+    {
+        List<string> rfcList = new List<string>();
+
+        string query = "SELECT DISTINCT RFC FROM ControlRFCSAT WHERE Activo = 1;";
+
+        using (SqlConnection conn = new SqlConnection(Guardarenbased.connectionString))
+        using (SqlCommand cmd = new SqlCommand(query, conn))
+        {
+            conn.Open();
+
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
-                conn.Open();
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        string rfc = (reader["RFC"] as string ?? "").Trim().ToUpper();
+                    string rfc = (reader["RFC"] as string ?? "").Trim().ToUpper();
 
-                        if (!string.IsNullOrEmpty(rfc) && !rfcList.Contains(rfc))
-                        {
-                            rfcList.Add(rfc);
-                        }
+                    if (!string.IsNullOrEmpty(rfc) && !rfcList.Contains(rfc))
+                    {
+                        rfcList.Add(rfc);
                     }
                 }
             }
-
-            return rfcList;
         }
+
+        return rfcList;
     }
-
-
+}     
