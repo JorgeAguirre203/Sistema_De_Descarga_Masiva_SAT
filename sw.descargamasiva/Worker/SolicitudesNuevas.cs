@@ -12,17 +12,19 @@ using System.Threading.Tasks;
 namespace sw.descargamasiva.Worker
 {
     internal class SolicitudesNuevas
-    {
+    { 
         public class segundoprocesoworker : BackgroundService
         {
             // Cada cuánto se piden CFDI nuevos para todos los RFC.
-            private static readonly TimeSpan Intervalo = TimeSpan.FromSeconds(30);
-
+            private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(2);
+           
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 ServicePointManager.Expect100Continue = false;
+
+                
 
                 while (!stoppingToken.IsCancellationRequested)
                 {

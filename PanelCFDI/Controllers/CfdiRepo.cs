@@ -11,6 +11,7 @@ public class CfdiFila
     public string Fecha;
     public string Emisor;
     public string Rfc;
+    public string Receptor;
     public string Tipo;
     public decimal Total;
 }
@@ -32,6 +33,7 @@ public static class CfdiRepo
                 d.Archivoxml.value('(/*:Comprobante/@Fecha)[1]', 'varchar(19)')                    AS fecha,
                 d.Archivoxml.value('(/*:Comprobante/*:Emisor/@Nombre)[1]', 'nvarchar(300)')        AS emisor,
                 d.Archivoxml.value('(/*:Comprobante/*:Emisor/@Rfc)[1]', 'varchar(13)')             AS rfc,
+                d.Archivoxml.value('(/*:Comprobante/*:Receptor/@Rfc)[1]', 'varchar(13)')           AS receptor,
                 d.Archivoxml.value('(/*:Comprobante/@TipoDeComprobante)[1]', 'varchar(1)')         AS tipo,
                 d.Archivoxml.value('(/*:Comprobante/@Total)[1]', 'decimal(18,2)')                  AS total
             FROM DatosXML d
@@ -55,6 +57,7 @@ public static class CfdiRepo
                         Fecha = r["fecha"] as string ?? "",
                         Emisor = r["emisor"] as string ?? "",
                         Rfc = r["rfc"] as string ?? "",
+                        Receptor = r["receptor"] as string ?? "",
                         Tipo = NombreTipo(r["tipo"] as string),
                         Total = r["total"] == DBNull.Value ? 0m : (decimal)r["total"]
                     });

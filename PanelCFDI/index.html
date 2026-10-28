@@ -5,200 +5,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>CFDI recibidos | Descarga Masiva SAT</title>
+    <title>Cfdi Admin | Descarga Masiva SAT</title>
 
-    <link rel="stylesheet" href="estilo.css">
+    <meta name="color-scheme" content="light dark">
+
+    <link rel="stylesheet" href="estilo.css?v=4">
 </head>
 
 <body>
 
     <!-- =====================================================
-         BARRA SUPERIOR
+         BARRA LATERAL
          ===================================================== -->
 
-    <header class="top">
-        <div class="wrap">
+    <aside class="lateral">
 
-            <div class="marca">
-                <span>CFDI recibidos</span>
-                <span class="rfc" id="rfc"></span>
-            </div>
-
-            <div class="estado">
-                <span class="punto"></span>
-                <span id="estado">Sin información del proceso</span>
-            </div>
-
+        <div class="marca">
+            <span class="logo"><img src="logo.png" alt="Logo"></span>
+            <span>
+                Cfdi Manager
+                <small class="rfc" id="rfc"></small>
+            </span>
         </div>
-    </header>
+
+        <nav class="nav" aria-label="Qué mostrar">
+            <button type="button" class="nav-item" data-vista="resumen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z" /></svg>
+                <span>Resumen</span>
+            </button>
+            <button type="button" class="nav-item" data-vista="comprobantes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5M10 13h6M10 17h6" /></svg>
+                <span>Comprobantes</span><span class="nav-badge" id="nav-cfdi"></span>
+            </button>
+            <button type="button" class="nav-item" data-vista="solicitudes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
+                <span>Solicitudes al SAT</span><span class="nav-badge" id="nav-sol"></span>
+            </button>
+            <button type="button" class="nav-item" data-vista="config">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1" /></svg>
+                <span>Configuración</span>
+            </button>
+        </nav>
+
+        <div class="estado">
+            <span class="punto"></span>
+            <span id="estado">Sin información del proceso</span>
+        </div>
+
+    </aside>
 
 
     <!-- =====================================================
-         CONTENIDO PRINCIPAL
+         CONTENIDO (una vista a la vez)
          ===================================================== -->
 
-    <main class="wrap">
+    <main class="contenido">
 
 
-        <!-- =================================================
-     RESUMEN
-     ================================================= -->
+        <!-- RESUMEN -->
 
-        <section class="resumen" aria-label="Resumen de actividad">
+        <section class="vista" id="vista-resumen">
 
-            <div>
-                <b id="r-total">0</b>
-                <span>CFDI descargados</span>
-            </div>
-
-            <div>
-                <b id="r-proceso">0</b>
-                <span>Solicitudes en proceso</span>
-            </div>
-
-            <div>
-                <b id="r-ultima">—</b>
-                <span>Última descarga</span>
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-     CONTROL DE FECHA
-     ================================================= -->
-
-        <section class="control" id="control">
-
-            <div class="control-info">
-
-                <span class="control-label">
-                    Control de búsqueda
-                </span>
-
-                <div class="control-fecha">
-                    Buscando desde:
-                    <strong id="desde">—</strong>
+            <div class="seccion-header">
+                <div>
+                    <h2>Resumen</h2>
+                    <p class="subtitulo">Así va la descarga de CFDI</p>
                 </div>
-
             </div>
 
+            <div class="resumen" aria-label="Resumen de actividad">
 
-            <div class="control-acciones">
-
-                <button type="button"
-                        id="btnActual"
-                        class="btn btn-secundario">
-                    Usar fecha actual
+                <button type="button" class="kpi" data-ir="comprobantes">
+                    <b id="r-total">0</b>
+                    <span class="k-cfdi">CFDI descargados</span>
                 </button>
 
-                <div class="fecha-grupo">
+                <button type="button" class="kpi" data-ir="solicitudes">
+                    <b id="r-proceso">0</b>
+                    <span class="k-proceso">Solicitudes en proceso</span>
+                </button>
 
-                    <input type="datetime-local"
-                           id="fechaPasada"
-                           aria-label="Fecha de inicio de búsqueda">
-
-                    <button type="button"
-                            id="btnFecha"
-                            class="btn btn-principal">
-                        Aplicar fecha
-                    </button>
-
-                </div>
+                <button type="button" class="kpi" data-ir="config">
+                    <b id="r-ultima">—</b>
+                    <span class="k-ultima">Última descarga</span>
+                </button>
 
             </div>
 
-
-            <div id="msg"
-                 class="mensaje"
-                 aria-live="polite">
-            </div>
-
-        </section>
-
-        <section class="control" id="controlrfc">
-
-            <div class="control-infoRFC">
-                <span class="control-label">
-                    Llenado de RFC:
-                </span>
-            </div>
-
-
-            <div class="control-acciones">
-
-                <!-- RFC SOLICITANTE -->
-                <div class="rfc-grupo">
-
-                    <label for="rfcSolicitante">RFC solicitante:</label>
-
-                    <input type="text"
-                           id="rfcSolicitante"
-                           aria-label="RFC solicitante">
-
-                    <button type="button"
-                            id="btnRfcSolicitante"
-                            class="btn btn-secundario">
-                        Cambiar RFC
-                    </button>
-
-                </div>
-
-
-                <!-- RFC RECIBIDO -->
-                <div class="rfc-grupo">
-
-                    <label for="rfcRecibido">RFC recibido:       </label>
-
-                    <input type="text"
-                           id="rfcRecibido"
-                           aria-label="RFC recibido">
-
-                    <button type="button"
-                            id="btnRfcRecibido"
-                            class="btn btn-secundario">
-                        Cambiar RFC
-                    </button>
-
-                </div>
-
-
-                <!-- RFC EMITIDO -->
-                <div class="rfc-grupo">
-
-                    <label for="rfcEmitido">RFC emitido:</label>
-
-                    <input type="text"
-                           id="rfcEmitido"
-                           aria-label="RFC emitido">
-
-                    <button type="button"
-                            id="btnRfcEmitido"
-                            class="btn btn-secundario">
-                        Cambiar RFC
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div id="msgRfc"
-                 class="mensaje"
-                 aria-live="polite">
-            </div>
+            <p class="nota">Buscando CFDI desde <strong id="desde">—</strong></p>
 
         </section>
 
 
-
-
-
-        <!-- =================================================
-     COMPROBANTES
-     ================================================= -->
-
-        <section class="comprobantes">
+        <section class="comprobantes vista" id="vista-comprobantes" hidden>
 
             <div class="seccion-header">
 
@@ -209,6 +108,8 @@
                         CFDI recibidos descargados desde el SAT
                     </p>
                 </div>
+
+                <span class="contador" id="contador"></span>
 
             </div>
 
@@ -222,45 +123,52 @@
                        placeholder="Buscar por emisor, RFC o UUID"
                        aria-label="Buscar comprobantes">
 
-                <select id="mes"
-                        aria-label="Filtrar por mes">
-
+                <select id="rfcFiltro" aria-label="Filtrar por RFC">
+                    Hidden>
                     <option value="">
-                        Todos los meses
+                        Todos los RFC
                     </option>
+                    </select>
 
-                </select>
+                    <select id="mes"
+                            aria-label="Filtrar por mes">
 
-                <select id="tipo"
-                        aria-label="Filtrar por tipo">
+                        <option value="">
+                            Todos los meses
+                        </option>
 
-                    <option value="">
-                        Todos los tipos
-                    </option>
+                    </select>
 
-                    <option value="Ingreso">
-                        Ingreso
-                    </option>
+                    <select id="tipo"
+                            aria-label="Filtrar por tipo">
 
-                    <option value="Egreso">
-                        Egreso
-                    </option>
+                        <option value="">
+                            Todos los tipos
+                        </option>
 
-                    <option value="Pago">
-                        Pago
-                    </option>
+                        <option value="Ingreso">
+                            Ingreso
+                        </option>
 
-                    <option value="Nómina">
-                        Nómina
-                    </option>
+                        <option value="Egreso">
+                            Egreso
+                        </option>
 
-                    <option value="Traslado">
-                        Traslado
-                    </option>
+                        <option value="Pago">
+                            Pago
+                        </option>
 
-                </select>
+                        <option value="Nómina">
+                            Nómina
+                        </option>
 
-            </div>
+                        <option value="Traslado">
+                            Traslado
+                        </option>
+
+                    </select>
+
+</div>
 
 
             <!-- TABLA -->
@@ -272,10 +180,10 @@
                     <thead>
                         <tr>
                             <th>Fecha</th>
+                            <th>Rfc Receptor</th>
                             <th>Emisor</th>
                             <th>UUID</th>
                             <th>Tipo</th>
-                            <th>Estado</th>
                             <th class="num">Total</th>
                             <th>Archivos</th>
                         </tr>
@@ -296,11 +204,7 @@
         </section>
 
 
-        <!-- =================================================
-     SOLICITUDES SAT
-     ================================================= -->
-
-        <section class="sol">
+        <section class="sol vista" id="vista-solicitudes" hidden>
 
             <div class="seccion-header">
 
@@ -325,7 +229,86 @@
 
         </section>
 
+
+        <!-- CONFIGURACIÓN -->
+
+        <section class="config vista" id="vista-config" hidden>
+
+            <div class="seccion-header">
+                <div>
+                    <h2>Configuración</h2>
+                    <p class="subtitulo">Fecha de búsqueda y RFC de la descarga</p>
+                </div>
+            </div>
+
+            <div class="config-caja">
+                <div class="config-cuerpo">
+
+                    <!-- FECHA DE BÚSQUEDA -->
+                    <div class="config-bloque">
+
+                        <h3>Fecha de búsqueda</h3>
+                        <p class="ayuda">Desde qué fecha se piden los CFDI al SAT.</p>
+
+                        <div class="campo">
+                            <label for="fechaPasada">Buscar desde</label>
+                            <div class="campo-fila">
+                                <input type="datetime-local" id="fechaPasada">
+                                <button type="button" id="btnFecha" class="btn btn-principal">Aplicar</button>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnActual" class="btn btn-secundario btn-bloque">
+                            Usar fecha actual
+                        </button>
+
+                        <div id="msg" class="mensaje" aria-live="polite"></div>
+
+                    </div>
+
+
+                    <!-- RFC -->
+                    <div class="config-bloque" id="controlrfc">
+
+                        <h3>RFC</h3>
+                        <p class="ayuda">RFC con el que se autentica y se filtran las solicitudes.</p>
+
+                        <div class="campo">
+                            <label for="rfcSolicitante">RFC solicitante</label>
+                            <div class="campo-fila">
+                                <input type="text" id="rfcSolicitante" class="rfc-input" maxlength="13" placeholder="XAXX010101000" autocomplete="off">
+                                <button type="button" id="btnRfcSolicitante" class="btn btn-secundario">Guardar</button>
+                            </div>
+                        </div>
+
+                        <div class="campo">
+                            <label for="rfcRecibido">RFC receptor (recibidos)</label>
+                            <div class="campo-fila">
+                                <input type="text" id="rfcRecibido" class="rfc-input" maxlength="13" placeholder="XAXX010101000" autocomplete="off">
+                                <button type="button" id="btnRfcRecibido" class="btn btn-secundario">Guardar</button>
+                            </div>
+                        </div>
+
+                        <div class="campo">
+                            <label for="rfcEmitido">RFC emisor (emitidos)</label>
+                            <div class="campo-fila">
+                                <input type="text" id="rfcEmitido" class="rfc-input" maxlength="13" placeholder="XAXX010101000" autocomplete="off">
+                                <button type="button" id="btnRfcEmitido" class="btn btn-secundario">Guardar</button>
+                            </div>
+                        </div>
+
+                        <div id="msgRfc" class="mensaje" aria-live="polite"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
+
 
 
     <!-- =====================================================
@@ -334,692 +317,743 @@
 
     <script>
 
-                // =====================================================
-                // UTILIDADES
-                // =====================================================
+                                // =====================================================
+                                // UTILIDADES
+                                // =====================================================
 
-                const $ = id => document.getElementById(id);
-
-
-                async function obtener(url) {
-
-                    const r = await fetch(url);
-
-                    if (!r.ok) {
-                        throw new Error(
-                            url + ' respondió ' + r.status
-                        );
-                    }
-
-                    return r.json();
-                }
+                                const $ = id => document.getElementById(id);
 
 
-                // =====================================================
-                // CONTROL DE LA FECHA DE BÚSQUEDA
-                // ControlConsultasSAT
-                // =====================================================
+                                async function obtener(url) {
 
-                async function cargar() {
+                                    const r = await fetch(url);
 
-                    try {
+                                    if (!r.ok) {
+                                        throw new Error(
+                                            url + ' respondió ' + r.status
+                                        );
+                                    }
 
-                        const r =
-                            await obtener('/Control/Estado?tipo=RECIBIDO');
-
-                        $('desde').textContent =
-                            r.fecha || '—';
-
-                    }
-                    catch (e) {
-
-                        $('msg').textContent =
-                            e.message;
-
-                    }
-                }
+                                    return r.json();
+                                }
 
 
-                async function fijar(datos) {
+                                // =====================================================
+                                // CONTROL DE LA FECHA DE BÚSQUEDA
+                                // ControlConsultasSAT
+                                // =====================================================
 
-                    try {
+                                async function cargar() {
 
-                        const body =
-                            new URLSearchParams({
-                                tipo: 'RECIBIDO',
-                                ...datos
-                            });
+                                    try {
 
+                                        const r =
+                                            await obtener('/Control/Estado?tipo=RECIBIDO');
 
-                        const resp = await fetch(
-                            '/Control/Fijar',
-                            {
-                                method: 'POST',
-                                body
-                            }
-                        );
+                                        $('desde').textContent =
+                                            r.fecha || '—';
 
+                                    }
+                                    catch (e) {
 
-                        if (!resp.ok) {
+                                        $('msg').textContent =
+                                            e.message;
 
-                            throw new Error(
-                                '/Control/Fijar respondió ' +
-                                resp.status
-                            );
-
-                        }
+                                    }
+                                }
 
 
-                        const r =
-                            await resp.json();
+                                async function fijar(datos) {
+
+                                    try {
+
+                                        const body =
+                                            new URLSearchParams({
+                                                tipo: 'RECIBIDO',
+                                                ...datos
+                                            });
 
 
-                        $('msg').textContent =
-                            r.ok
-                                ? 'Actualizado correctamente'
-                                : r.error;
+                                        const resp = await fetch(
+                                            '/Control/Fijar',
+                                            {
+                                                method: 'POST',
+                                                body
+                                            }
+                                        );
 
 
-                        if (r.ok) {
-                            cargar();
-                        }
+                                        if (!resp.ok) {
 
-                    }
-                    catch (e) {
+                                            throw new Error(
+                                                '/Control/Fijar respondió ' +
+                                                resp.status
+                                            );
 
-                        $('msg').textContent =
-                            e.message;
+                                        }
 
-                    }
-                }
+
+                                        const r =
+                                            await resp.json();
+
+
+                                        $('msg').dataset.tipo = r.ok ? 'ok' : 'err';
+                                        $('msg').textContent =
+                                            r.ok
+                                                ? 'Actualizado correctamente'
+                                                : r.error;
+
+
+                                        if (r.ok) {
+                                            cargar();
+                                        }
+
+                                    }
+                                    catch (e) {
+
+                                        $('msg').textContent =
+                                            e.message;
+
+                                    }
+                                }
 // =====================================================
 // GUARDAR RFC
 // =====================================================
 
 async function guardarRfc(url, tipo, idInput) {
 
-    const rfc = $(idInput).value.trim().toUpperCase();
+                    const rfc = $(idInput).value.trim().toUpperCase();
 
-    if (!rfc) {
-        $('msgRfc').textContent = 'Escribe un RFC.';
-        return;
-    }
+                    if (!rfc) {
+                        $('msgRfc').textContent = 'Escribe un RFC.';
+                        return;
+                    }
 
-    try {
+                    try {
 
-        const resp = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ tipo, rfc })
-        });
+                        const resp = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ tipo, rfc })
+                        });
 
-        if (!resp.ok) {
-            throw new Error(url + ' respondió ' + resp.status);
-        }
+                        if (!resp.ok) {
+                            throw new Error(url + ' respondió ' + resp.status);
+                        }
 
-        const data = await resp.json();
+                        const data = await resp.json();
 
-        $('msgRfc').textContent = data.ok
-            ? 'RFC ' + tipo.toLowerCase() + ' actualizado'
-            : data.error;
+                        $('msgRfc').dataset.tipo = data.ok ? 'ok' : 'err';
+                        $('msgRfc').textContent = data.ok
+                            ? 'RFC ' + tipo.toLowerCase() + ' actualizado'
+                            : data.error;
 
-    }
-    catch (e) {
-        $('msgRfc').textContent = e.message;
-    }
+                    }
+                    catch (e) {
+                        $('msgRfc').dataset.tipo = 'err';
+                        $('msgRfc').textContent = e.message;
+                    }
 }
 
 
 $('btnRfcRecibido').onclick = () =>
-    guardarRfc('/Control/FijarRfc', 'RECIBIDO', 'rfcRecibido');
+                    guardarRfc('/Control/FijarRfc', 'RECIBIDO', 'rfcRecibido');
 
 $('btnRfcEmitido').onclick = () =>
-    guardarRfc('/Control/FijarRfc', 'EMISOR', 'rfcEmitido');
+                    guardarRfc('/Control/FijarRfc', 'EMISOR', 'rfcEmitido');
 
 $('btnRfcSolicitante').onclick = () =>
-    guardarRfc('/Control/FijarRfc', 'SOLICITANTE', 'rfcSolicitante');
+                    guardarRfc('/Control/FijarRfc', 'SOLICITANTE', 'rfcSolicitante');
 
 
-                // =====================================================
-                // BOTÓN FECHA ACTUAL
-                // =====================================================
+                                // =====================================================
+                                // BOTÓN FECHA ACTUAL
+                                // =====================================================
 
-                $('btnActual').onclick = () => {
+                                $('btnActual').onclick = () => {
 
-                    if (
-                        confirm(
-                            'Se buscará solo desde hoy en adelante. ¿Continuar?'
-                        )
-                    ) {
+                                    if (
+                                        confirm(
+                                            'Se buscará solo desde hoy en adelante. ¿Continuar?'
+                                        )
+                                    ) {
 
-                        fijar({
-                            modo: 'actual'
-                        });
+                                        fijar({
+                                            modo: 'actual'
+                                        });
 
-                    }
+                                    }
 
-                };
+                                };
 
 
-                // =====================================================
-                // BOTÓN APLICAR FECHA
-                // =====================================================
+                                // =====================================================
+                                // BOTÓN APLICAR FECHA
+                                // =====================================================
 
-                $('btnFecha').onclick = () => {
+                                $('btnFecha').onclick = () => {
 
-                    const v =
-                        $('fechaPasada').value;
+                                    const v =
+                                        $('fechaPasada').value;
 
 
-                    if (!v) {
+                                    if (!v) {
 
-                        $('msg').textContent =
-                            'Elige una fecha.';
+                                        $('msg').textContent =
+                                            'Elige una fecha.';
 
-                        return;
-                    }
+                                        return;
+                                    }
 
 
-                    fijar({
-                        modo: 'fecha',
-                        fecha: v
-                    });
+                                    fijar({
+                                        modo: 'fecha',
+                                        fecha: v
+                                    });
 
-                };
+                                };
 
 
-                // =====================================================
-                // DATOS DEL PANEL
-                // =====================================================
+                                // =====================================================
+                                // DATOS DEL PANEL
+                                // =====================================================
 
-                let cfdis = [];
+                                let cfdis = [];
 
-                /*
-                    Ejemplo:
+                                /*
+                                    Ejemplo:
 
-                    {
-                        fecha: '2026-10-01T10:00:00',
-                        emisor: '',
-                        rfc: '',
-                        uuid: '',
-                        tipo: 'Ingreso',
-                        total: 0,
-                        xml: '',
-                        pdf: ''
-                    }
-                */
+                                    {
+                                        fecha: '2026-10-01T10:00:00',
+                                        emisor: '',
+                                        rfc: '',
+                                        uuid: '',
+                                        tipo: 'Ingreso',
+                                        total: 0,
+                                        xml: '',
+                                        pdf: ''
+                                    }
+                                */
 
 
-                let solicitudes = [];
+                                let solicitudes = [];
 
-                /*
-                    Ejemplo:
+                                /*
+                                    Ejemplo:
 
-                    {
-                        id: '',
-                        desde: '2026-09-01 00:00',
-                        hasta: '2026-09-30 00:00',
-                        estado: 'En proceso'
-                    }
-                */
+                                    {
+                                        id: '',
+                                        desde: '2026-09-01 00:00',
+                                        hasta: '2026-09-30 00:00',
+                                        estado: 'En proceso'
+                                    }
+                                */
 
 
-                let info = {};
+                                let info = {};
 
-                /*
-                    Ejemplo:
+                                /*
+                                    Ejemplo:
 
-                    {
-                        rfc: '',
-                        estado: '',
-                        ultima: '',
-                        total: 0
-                    }
-                */
+                                    {
+                                        rfc: '',
+                                        estado: '',
+                                        ultima: '',
+                                        total: 0
+                                    }
+                                */
 
 
-                // =====================================================
-                // CARGAR DATOS
-                // =====================================================
+                                // =====================================================
+                                // CARGAR DATOS
+                                // =====================================================
 
-                async function cargarDatos() {
+                                async function cargarDatos() {
 
-                    try {
+                                    try {
 
-                        const [
-                            c,
-                            s,
-                            i
-                        ] = await Promise.all([
+                                        const [
+                                            c,
+                                            s,
+                                            i
+                                        ] = await Promise.all([
 
-                            obtener('/Cfdi/Lista'),
+                                            obtener('/Cfdi/Lista'),
 
-                            obtener('/Cfdi/Solicitudes'),
+                                            obtener('/Cfdi/Solicitudes'),
 
-                            obtener('/Cfdi/Info')
+                                            obtener('/Cfdi/Info')
 
-                        ]);
+                                        ]);
 
 
-                        cfdis = c;
+                                        cfdis = c;
 
-                        solicitudes = s;
+                                        solicitudes = s;
 
-                        info = i;
+                                        info = i;
 
 
-                        pintar();
+                                        pintar();
 
-                    }
-                    catch (e) {
+                                    }
+                                    catch (e) {
 
-                        $('estado').textContent =
-                            'Error cargando datos: ' +
-                            e.message;
+                                        $('estado').textContent =
+                                            'Error cargando datos: ' +
+                                            e.message;
 
-                    }
-                }
+                                    }
+                                }
 
 
-                // =====================================================
-                // ESCAPAR HTML
-                // =====================================================
+                                // =====================================================
+                                // ESCAPAR HTML
+                                // =====================================================
 
-                const esc = s =>
-                    String(s ?? '')
-                        .replace(
-                            /[&<>"']/g,
-                            c => ({
-                                '&': '&amp;',
-                                '<': '&lt;',
-                                '>': '&gt;',
-                                '"': '&quot;',
-                                "'": '&#39;'
-                            }[c])
-                        );
+                                const esc = s =>
+                                    String(s ?? '')
+                                        .replace(
+                                            /[&<>"']/g,
+                                            c => ({
+                                                '&': '&amp;',
+                                                '<': '&lt;',
+                                                '>': '&gt;',
+                                                '"': '&quot;',
+                                                "'": '&#39;'
+                                            }[c])
+                                        );
 
 
-                // =====================================================
-                // FORMATO DE DINERO
-                // =====================================================
+                                // =====================================================
+                                // FORMATO DE DINERO
+                                // =====================================================
 
-                const dinero = n =>
-                    Number(n).toLocaleString(
-                        'es-MX',
-                        {
-                            style: 'currency',
-                            currency: 'MXN'
-                        }
-                    );
+                                const dinero = n =>
+                                    Number(n).toLocaleString(
+                                        'es-MX',
+                                        {
+                                            style: 'currency',
+                                            currency: 'MXN'
+                                        }
+                                    );
 
 
-                // =====================================================
-                // FORMATO DE FECHA
-                // =====================================================
+                                // =====================================================
+                                // FORMATO DE FECHA
+                                // =====================================================
 
-                const fechaMx = f =>
-                    f
-                        ? f
-                            .slice(0, 10)
-                            .split('-')
-                            .reverse()
-                            .join('/')
-                        : '';
+                                const fechaMx = f =>
+                                    f
+                                        ? f
+                                            .slice(0, 10)
+                                            .split('-')
+                                            .reverse()
+                                            .join('/')
+                                        : '';
 
 
-                // =====================================================
-                // CLASE DEL TIPO DE CFDI
-                // =====================================================
+                                // =====================================================
+                                // CLASE DEL TIPO DE CFDI
+                                // =====================================================
 
-                const claseTipo = t =>
-                    ({
-                        Ingreso: 'ok',
-                        Nómina: 'ok',
-                        Egreso: 'err',
-                        Pago: 'pend'
-                    }[t] || 'pend');
+                                const claseTipo = t =>
+                                    ({
+                                        Ingreso: 'ok',
+                                        Nómina: 'ok',
+                                        Egreso: 'err',
+                                        Pago: 'pend'
+                                    }[t] || 'pend');
 
 
-                // =====================================================
-                // CLASE DEL ESTADO DE SOLICITUD
-                // =====================================================
+                                // =====================================================
+                                // CLASE DEL ESTADO DE SOLICITUD
+                                // =====================================================
 
-                const claseEstado = e =>
-                    /descargada|terminada|sin cfdi/i.test(e)
-                        ? 'ok'
-                        : /error|rechazada|vencida/i.test(e)
-                            ? 'err'
-                            : 'pend';
+                                const claseEstado = e =>
+                                    /descargada|terminada|sin cfdi/i.test(e)
+                                        ? 'ok'
+                                        : /error|rechazada|vencida/i.test(e)
+                                            ? 'err'
+                                            : 'pend';
 
 
-                // =====================================================
-                // PINTAR INFORMACIÓN
-                // =====================================================
+                                // =====================================================
+                                // PINTAR INFORMACIÓN
+                                // =====================================================
 
-                function pintar() {
+                                function pintar() {
 
-                    // -------------------------------------------------
-                    // INFORMACIÓN GENERAL
-                    // -------------------------------------------------
+                                    // -------------------------------------------------
+                                    // INFORMACIÓN GENERAL
+                                    // -------------------------------------------------
 
-                    $('rfc').textContent =
-                        info.rfc || '';
+                                    const 
+                                        receptores = [...new Set(cfdis.map(c => c.receptor).filter(boolean))].sort();
 
+                                    if ($('rfc')) { 
+                                        ('rfc').textContent =
+                                            receptores.length > 1
+                                                ? receptores.length + ' RFC'
+                                                : (receptores[0] || info.rfc || '');
+                                        }
+                                        
 
-                    $('estado').textContent =
-                        info.estado ||
-                        'Sin información del proceso';
 
+                                    $('estado').textContent =
+                                        info.estado ||
+                                        'Sin información del proceso';
 
-                    $('r-total').textContent =
-                        (
-                            info.total ??
-                            cfdis.length
-                        ).toLocaleString('es-MX');
 
+                                    $('r-total').textContent =
+                                        (
+                                            info.total ??
+                                            cfdis.length
+                                        ).toLocaleString('es-MX');
 
-                    $('r-proceso').textContent =
-                        solicitudes.filter(
-                            s =>
-                                claseEstado(s.estado) === 'pend'
-                        ).length;
 
+                                    $('r-proceso').textContent =
+                                        solicitudes.filter(
+                                            s =>
+                                                claseEstado(s.estado) === 'pend'
+                                        ).length;
 
-                    $('r-ultima').textContent =
-                        info.ultima || '—';
 
+                                    $('r-ultima').textContent =
+                                        info.ultima || '—';
 
-                    // -------------------------------------------------
-                    // MESES DISPONIBLES
-                    // -------------------------------------------------
+                                    $('nav-cfdi').textContent =
+                                        cfdis.length || '';
 
-                    const meses = [
-                        ...new Set(
-                            cfdis
-                                .map(c => c.fecha.slice(0, 7))
-                        )
-                    ]
-                        .sort()
-                        .reverse();
+                                    $('nav-sol').textContent =
+                                        $('r-proceso').textContent === '0'
+                                            ? ''
+                                            : $('r-proceso').textContent;
 
 
-                    const actual =
-                        $('mes').value;
+                                    // -------------------------------------------------
+                                    // MESES DISPONIBLES
+                                    // -------------------------------------------------
 
+                                    const meses = [
+                                        ...new Set(
+                                            cfdis
+                                                .map(c => c.fecha.slice(0, 7))
+                                        )
+                                    ]
+                                        .sort()
+                                        .reverse();
 
-                    $('mes').innerHTML =
-                        '<option value="">Todos los meses</option>' +
 
-                        meses
-                            .map(
-                                m =>
-                                    `<option value="${m}">${m}</option>`
-                            )
-                            .join('');
+                                    const actual =
+                                        $('mes').value;
 
 
-                    $('mes').value =
-                        actual;
+                                    $('mes').innerHTML =
+                                        '<option value="">Todos los meses</option>' +
 
+                                        meses
+                                            .map(
+                                                m =>
+                                                    `<option value="${m}">${m}</option>`
+                                            )
+                                            .join('');
 
-                    // -------------------------------------------------
-                    // TABLA DE CFDI
-                    // -------------------------------------------------
 
-                    $('filas').innerHTML =
-                        cfdis
-                            .map(
-                                c => `
+                                    $('mes').value =
+                                        actual;
 
-                                <tr
-                                    data-mes="${esc(c.fecha.slice(0, 7))}"
-                                    data-tipo="${esc(c.tipo)}">
 
-                                    <td>
-                                        ${fechaMx(c.fecha)}
-                                    </td>
+                                    // -------------------------------------------------
+                                    // TABLA DE CFDI
+                                    // -------------------------------------------------
 
+                                    $('filas').innerHTML =
+                                        cfdis
+                                            .map(
+                                                c => `
 
-                                    <td class="emisor">
+                                                <tr
+                                                    data-mes="${esc(c.fecha.slice(0, 7))}"
+                                                    data-tipo="${esc(c.tipo)}">
 
-                                        ${esc(c.emisor)}
+                                                    <td>
+                                                        ${fechaMx(c.fecha)}
+                                                    </td>
 
-                                        <small>
-                                            ${esc(c.rfc)}
-                                        </small>
 
-                                    </td>
+                                                    <td class="emisor">
+                                                        <div class="emisor-celda">
+                                                            <span class="avatar" aria-hidden="true">${esc((c.emisor || '?').trim().charAt(0).toUpperCase())}</span>
+                                                            <span>
+                                                                ${esc(c.emisor)}
+                                                                <small>${esc(c.rfc)}</small>
+                                                            </span>
+                                                        </div>
+                                                    </td>
 
 
-                                    <td class="uuid">
-                                        ${esc(c.uuid)}
-                                    </td>
+                                                    <td class="uuid">
+                                                        ${esc(c.uuid)}
+                                                    </td>
 
 
-                                    <td>
+                                                    <td>
 
-                                        <span
-                                            class="tag ${claseTipo(c.tipo)}">
+                                                        <span
+                                                            class="tag ${claseTipo(c.tipo)}">
 
-                                            ${esc(c.tipo)}
+                                                            ${esc(c.tipo)}
 
-                                        </span>
+                                                        </span>
 
-                                    </td>
+                                                    </td>
 
 
-                                    <td class="num">
-                                        ${dinero(c.total)}
-                                    </td>
+                                                    <td class="num">
+                                                        ${dinero(c.total)}
+                                                    </td>
 
 
-                                    <td class="acc">
+                                                    <td class="acc">
 
-                                        ${
-                                            c.xml
-                                                ? `<a
-                                                    href="${esc(c.xml)}"
-                                                    target="_blank"
-                                                    rel="noopener">
-                                                    XML
-                                                   </a>`
-                                                : ''
+                                                        ${
+                                                            c.xml
+                                                                ? `<a
+                                                                    href="${esc(c.xml)}"
+                                                                    target="_blank"
+                                                                    rel="noopener">
+                                                                    XML
+                                                                   </a>`
+                                                                : ''
+                                                        }
+
+
+                                                        ${
+                                                            c.pdf
+                                                                ? `<a
+                                                                    href="${esc(c.pdf)}"
+                                                                    target="_blank"
+                                                                    rel="noopener">
+                                                                    PDF
+                                                                   </a>`
+                                                                : ''
+                                                        }
+
+                                                    </td>
+
+                                                </tr>
+
+                                            `
+                                            )
+                                            .join('');
+
+
+                                    // -------------------------------------------------
+                                    // SOLICITUDES SAT
+                                    // -------------------------------------------------
+
+                                    $('solicitudes').innerHTML =
+                                        solicitudes
+                                            .map(
+                                                s => `
+
+                                                <li class="sol-${claseEstado(s.estado)}">
+
+                                                    <span>
+
+                                                        <strong>
+                                                            Solicitud ${esc(s.id)}
+                                                        </strong>
+
+                                                        <small>
+                                                            del
+                                                            ${fechaMx(s.desde)}
+                                                            al
+                                                            ${fechaMx(s.hasta)}
+                                                        </small>
+
+                                                    </span>
+
+
+                                                    <span
+                                                        class="tag ${claseEstado(s.estado)}">
+
+                                                        ${esc(s.estado)}
+
+                                                    </span>
+
+                                                </li>
+
+                                            `
+                                            )
+                                            .join('');
+
+
+                                    // -------------------------------------------------
+                                    // MENSAJE DE SOLICITUDES VACÍAS
+                                    // -------------------------------------------------
+
+                                    $('vacio-sol').style.display =
+                                        solicitudes.length
+                                            ? 'none'
+                                            : 'block';
+
+
+                                    // -------------------------------------------------
+                                    // APLICAR FILTROS
+                                    // -------------------------------------------------
+
+                                    filtrar();
+
+                                }
+
+
+                                // =====================================================
+                                // FILTRAR CFDI
+                                // =====================================================
+
+                                function filtrar() {
+
+                                    const t =
+                                        $('buscar')
+                                            .value
+                                            .trim()
+                                            .toLowerCase();
+
+
+                                    const filas =
+                                        [
+                                            ...document.querySelectorAll(
+                                                '#filas tr'
+                                            )
+                                        ];
+
+
+                                    let n = 0;
+
+
+                                    filas.forEach(f => {
+
+                                        const ok =
+
+                                            f.textContent
+                                                .toLowerCase()
+                                                .includes(t)
+
+                                            &&
+
+                                            (
+                                                !$('mes').value ||
+                                                f.dataset.mes ===
+                                                $('mes').value
+                                            )
+
+                                            &&
+
+                                            (
+                                                !$('tipo').value ||
+                                                f.dataset.tipo ===
+                                                $('tipo').value
+                                            );
+
+
+                                        f.hidden = !ok;
+
+
+                                        if (ok) {
+                                            n++;
                                         }
 
+                                    });
 
-                                        ${
-                                            c.pdf
-                                                ? `<a
-                                                    href="${esc(c.pdf)}"
-                                                    target="_blank"
-                                                    rel="noopener">
-                                                    PDF
-                                                   </a>`
-                                                : ''
-                                        }
 
-                                    </td>
+                                    $('vacio').textContent =
 
-                                </tr>
+                                        cfdis.length
 
-                            `
-                            )
-                            .join('');
+                                            ? 'No hay comprobantes con esos filtros. Cambia la búsqueda o el mes.'
 
+                                            : 'Aún no hay comprobantes descargados.';
 
-                    // -------------------------------------------------
-                    // SOLICITUDES SAT
-                    // -------------------------------------------------
 
-                    $('solicitudes').innerHTML =
-                        solicitudes
-                            .map(
-                                s => `
+                                    $('vacio').style.display =
+                                        n
+                                            ? 'none'
+                                            : 'block';
 
-                                <li
-                                    class="${
-                                        claseEstado(s.estado) === 'ok'
-                                            ? 'listo'
-                                            : ''
-                                    }">
+                                    $('contador').textContent =
+                                        n === cfdis.length
+                                            ? n + (n === 1 ? ' comprobante' : ' comprobantes')
+                                            : n + ' de ' + cfdis.length;
 
-                                    <span>
+                                }
 
-                                        <strong>
-                                            Solicitud ${esc(s.id)}
-                                        </strong>
 
-                                        <small>
-                                            del
-                                            ${fechaMx(s.desde)}
-                                            al
-                                            ${fechaMx(s.hasta)}
-                                        </small>
+                                // =====================================================
+                                // EVENTOS DE FILTROS
+                                // =====================================================
 
-                                    </span>
+                                ['buscar', 'mes', 'tipo']
+                                    .forEach(
+                                        id =>
+                                            $(id).addEventListener(
+                                                'input',
+                                                filtrar
+                                            )
+                                    );
 
 
-                                    <span
-                                        class="tag ${claseEstado(s.estado)}">
+                                // =====================================================
+                                // BARRA LATERAL: CAMBIAR DE VISTA
+                                // =====================================================
 
-                                        ${esc(s.estado)}
+                                const vistas = ['resumen', 'comprobantes', 'solicitudes', 'config'];
 
-                                    </span>
+                                function mostrar(v) {
 
-                                </li>
+                                    if (!vistas.includes(v)) v = 'resumen';
 
-                            `
-                            )
-                            .join('');
+                                    vistas.forEach(x => {
+                                        $('vista-' + x).hidden = x !== v;
+                                    });
 
+                                    document.querySelectorAll('.nav-item').forEach(b => {
+                                        b.classList.toggle('activo', b.dataset.vista === v);
+                                        b.setAttribute('aria-current', b.dataset.vista === v ? 'page' : 'false');
+                                    });
 
-                    // -------------------------------------------------
-                    // MENSAJE DE SOLICITUDES VACÍAS
-                    // -------------------------------------------------
+                                    if (location.hash !== '#' + v) history.replaceState(null, '', '#' + v);
+                                    window.scrollTo(0, 0);
+                                }
 
-                    $('vacio-sol').style.display =
-                        solicitudes.length
-                            ? 'none'
-                            : 'block';
+                                document.querySelectorAll('[data-vista]').forEach(b =>
+                                    b.addEventListener('click', () => mostrar(b.dataset.vista)));
 
+                                document.querySelectorAll('[data-ir]').forEach(b =>
+                                    b.addEventListener('click', () => mostrar(b.dataset.ir)));
 
-                    // -------------------------------------------------
-                    // APLICAR FILTROS
-                    // -------------------------------------------------
+                                mostrar(location.hash.slice(1));
 
-                    filtrar();
 
-                }
+                                // =====================================================
+                                // ARRANQUE
+                                // =====================================================
 
+                                pintar();
 
-                // =====================================================
-                // FILTRAR CFDI
-                // =====================================================
+                                cargar();
 
-                function filtrar() {
+                                cargarDatos();
 
-                    const t =
-                        $('buscar')
-                            .value
-                            .trim()
-                            .toLowerCase();
 
+                                // Actualizar automáticamente
+                                // cada 30 segundos
 
-                    const filas =
-                        [
-                            ...document.querySelectorAll(
-                                '#filas tr'
-                            )
-                        ];
-
-
-                    let n = 0;
-
-
-                    filas.forEach(f => {
-
-                        const ok =
-
-                            f.textContent
-                                .toLowerCase()
-                                .includes(t)
-
-                            &&
-
-                            (
-                                !$('mes').value ||
-                                f.dataset.mes ===
-                                $('mes').value
-                            )
-
-                            &&
-
-                            (
-                                !$('tipo').value ||
-                                f.dataset.tipo ===
-                                $('tipo').value
-                            );
-
-
-                        f.hidden = !ok;
-
-
-                        if (ok) {
-                            n++;
-                        }
-
-                    });
-
-
-                    $('vacio').textContent =
-
-                        cfdis.length
-
-                            ? 'No hay comprobantes con esos filtros. Cambia la búsqueda o el mes.'
-
-                            : 'Aún no hay comprobantes descargados.';
-
-
-                    $('vacio').style.display =
-                        n
-                            ? 'none'
-                            : 'block';
-
-                }
-
-
-                // =====================================================
-                // EVENTOS DE FILTROS
-                // =====================================================
-
-                ['buscar', 'mes', 'tipo']
-                    .forEach(
-                        id =>
-                            $(id).addEventListener(
-                                'input',
-                                filtrar
-                            )
-                    );
-
-
-                // =====================================================
-                // ARRANQUE
-                // =====================================================
-
-                pintar();
-
-                cargar();
-
-                cargarDatos();
-
-
-                // Actualizar automáticamente
-                // cada 30 segundos
-
-                setInterval(
-                    cargarDatos,
-                    30000
-                );
+                                setInterval(
+                                    cargarDatos,
+                                    30000
+                                );
 
     </script>
 

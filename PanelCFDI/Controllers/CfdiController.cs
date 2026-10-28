@@ -29,6 +29,7 @@ public class CfdiController : Controller
                 fecha = c.Fecha,
                 emisor = c.Emisor,
                 rfc = c.Rfc,
+                receptor = c.Receptor,
                 tipo = c.Tipo,
                 total = c.Total,
                 xml = Url.Content("~/Cfdi/Xml?uuid=" + HttpUtility.UrlEncode(c.Uuid)),

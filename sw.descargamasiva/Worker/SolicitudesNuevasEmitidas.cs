@@ -16,14 +16,16 @@ namespace sw.descargamasiva.Worker
         public class tercerprocesoworker : BackgroundService
         {
             // Cada cuánto se piden CFDI nuevos para todos los RFC.
-            private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(30);
-
+            private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(2);
+            private static readonly TimeSpan RetrasoInicial = TimeSpan.FromSeconds(20);
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 ServicePointManager.Expect100Continue = false;
 
+
+                await Task.Delay(RetrasoInicial, stoppingToken);
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     Console.WriteLine();

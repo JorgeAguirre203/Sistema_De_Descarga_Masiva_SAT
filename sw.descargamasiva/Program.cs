@@ -9,6 +9,7 @@ using static sw.descargamasiva.Worker.SolicitudesNuevasEmitidas;
 using static sw.descargamasiva.Worker.SolicitudesNuevas;
 using static sw.descargamasiva.Worker.SolicitudesPendientes;
 
+
 namespace sw.descargamasiva
 {
     class Program
@@ -41,7 +42,7 @@ namespace sw.descargamasiva
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<segundoprocesoworker>();   // CFDI recibidos
-                   //services.AddHostedService<tercerprocesoworker>();    // CFDI emitidos
+                    services.AddHostedService<tercerprocesoworker>();    // CFDI emitidos
                     services.AddHostedService<PrimerProcesoWorker>();    // solicitudes pendientes
                     services.AddHostedService<VigenciaFacturasWorker>(); // vigencia de CFDI
                 })
