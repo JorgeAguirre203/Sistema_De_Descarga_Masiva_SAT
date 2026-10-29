@@ -2,16 +2,17 @@
 using System.Globalization;
 using System.Web.Mvc;
 
-// Responde a /Control/Estado y /Control/Fijar (las URLs que usa el JavaScript)
+// Responde a /Control/EstadoRfc, /Control/FijarFechaRfc y /Control/FijarRfc
+// (las URLs que usa el JavaScript de index.html)
 public class ControlController : Controller
 {
+    // GET /Control/EstadoRfc -> fechas de ControlConsultasPorRFC
     [HttpGet]
-    public JsonResult Estado(string tipo = "RECIBIDO")
+    public JsonResult EstadoRfc()
     {
         try
         {
-            DateTime? f = ControlConsultaRepo.Obtener(tipo);
-            return Json(new { ok = true, fecha = f?.ToString("yyyy-MM-dd HH:mm:ss") },
+            return Json(new { ok = true, filas = ControlConsultaRepo.ListarPorRfc() },
                         JsonRequestBehavior.AllowGet);
         }
         catch (Exception ex)
@@ -21,11 +22,11 @@ public class ControlController : Controller
         }
     }
 
-    [HttpPost]
+
     // POST /Control/FijarFechaRfc  (rfc, modo = actual|fecha, fecha)
     // Aplica la fecha a todos los tipos del RFC.
-    
-    public JsonResult Fijar(string rfc, string modo, string fecha)
+    [HttpPost]
+    public JsonResult FijarFechaRfc(string rfc, string modo, string fecha)
     {
         try
         {
@@ -42,6 +43,7 @@ public class ControlController : Controller
             }
             else if (modo == "fecha")
             {
+                // El input datetime-local manda "2025-02-10T12:00"
                 if (!DateTime.TryParseExact(
                         fecha,
                         new[] { "yyyy-MM-ddTHH:mm", "yyyy-MM-ddTHH:mm:ss" },
@@ -58,7 +60,7 @@ public class ControlController : Controller
                 return Json(new { ok = false, error = "Datos incompletos." });
             }
 
-            int filas = ControlConsultaRepo.FijarPorRFC(rfc, nueva);
+            int filas = ControlConsultaRepo.FijarPorRfc(rfc, nueva);
 
             return Json(new { ok = true, fecha = nueva.ToString("yyyy-MM-dd HH:mm"), filas = filas });
         }
@@ -67,10 +69,13 @@ public class ControlController : Controller
             return Json(new { ok = false, error = ex.Message });
         }
     }
+
+
+    // POST /Control/FijarRfc  (tipo, rfc) -> ControlRFCSAT
     [HttpPost]
     public JsonResult FijarRfc(string tipo, string rfc)
     {
-        try  
+        try
         {
             ControlConsultaRepo.FijarRfc(tipo, rfc);
             return Json(new { ok = true, rfc = rfc });
@@ -80,6 +85,4 @@ public class ControlController : Controller
             return Json(new { ok = false, error = ex.Message });
         }
     }
-
- 
 }

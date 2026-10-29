@@ -11,7 +11,7 @@ namespace sw.descargamasiva.Services
         static string urlSolicitudRecibidosAction =
             "http://DescargaMasivaTerceros.sat.gob.mx/ISolicitaDescargaService/SolicitaDescargaRecibidos";
 
-        // 1. Añadimos 'string rfcActual' como parámetro de entrada
+       
         public static string GenerarSolicitudRecibidos(
             string rfcActual,
             X509Certificate2 certificate,
@@ -22,10 +22,10 @@ namespace sw.descargamasiva.Services
             out string RfcEmisor,
             out string RfcSolicitante)
         {
-            // 2. Usamos el rfcActual para buscar los datos específicos de este contribuyente en la BD
+            //  Usamos el rfcActual para buscar los datos específicos de este contribuyente en la BD
             RfcReceptor = rfcActual;
             RfcEmisor = rfcActual;
-            RfcSolicitante = rfcActual; // O bien, si tu lógica usa un solicitante maestro por RFC, asegúrate de pasarlo aquí.
+            RfcSolicitante = rfcActual; 
 
             // Obtenemos la última fecha de consulta vinculada estrictamente a este RFC
             fechaInicial = Guardarenbased.ObtenerUltimaConsultaPorRfc(rfcActual, "RECIBIDO");
@@ -55,7 +55,7 @@ namespace sw.descargamasiva.Services
                 urlSolicitud,
                 urlSolicitudRecibidosAction);
 
-            // 3. Generamos el XML inyectando el rfcActual en lugar de datos quemados
+            //      Generamos el XML inyectando el rfcActual en lugar de datos quemados
             string xmlSolicitud = solicitud.Generate(
                 certificate: certificate,
                 rfcEmisor: rfcActual,
