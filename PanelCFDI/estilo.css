@@ -1003,3 +1003,103 @@ th.num {
         height: 100%;
         object-fit: contain;
     }
+
+
+/* =========================================================
+   FECHA DE BÚSQUEDA POR RFC
+   ========================================================= */
+
+.config-bloque.fechas {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-bottom: 1px solid var(--linea);
+}
+
+#vista-config .config-caja {
+    max-width: none;
+}
+
+.fechas-tabla {
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    overflow: hidden;
+}
+
+    .fechas-tabla:empty {
+        display: none;
+    }
+
+.fecha-fila,
+.fecha-nueva {
+    display: grid;
+    grid-template-columns: 150px 1fr 210px auto auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.fecha-fila {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--linea);
+}
+
+    .fecha-fila:last-child {
+        border-bottom: 0;
+    }
+
+.fecha-rfc {
+    font-family: var(--mono);
+    font-weight: 600;
+}
+
+.fecha-actual {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--tinta);
+    white-space: nowrap;
+}
+
+    .fecha-actual small {
+        margin-left: 6px;
+        font-family: var(--texto);
+        font-size: 12px;
+        color: var(--suave);
+    }
+
+.fecha-fila input,
+.fecha-nueva input {
+    height: 40px;
+    min-width: 0;
+    padding: 0 12px;
+    color: var(--tinta);
+    background: var(--superficie-2);
+    border: 1px solid var(--linea-fuerte);
+    border-radius: var(--radio-sm);
+    outline: none;
+}
+
+    .fecha-fila input:focus,
+    .fecha-nueva input:focus {
+        border-color: var(--acento);
+        box-shadow: 0 0 0 4px var(--acento-claro);
+    }
+
+.fecha-nueva {
+    grid-template-columns: 150px 210px auto;
+    justify-content: start;
+}
+
+@media (max-width: 900px) {
+    .fecha-fila {
+        grid-template-columns: 1fr auto;
+    }
+
+        .fecha-fila .fecha-actual,
+        .fecha-fila input {
+            grid-column: 1 / -1;
+        }
+
+    .fecha-nueva {
+        grid-template-columns: 1fr 1fr;
+    }
+}

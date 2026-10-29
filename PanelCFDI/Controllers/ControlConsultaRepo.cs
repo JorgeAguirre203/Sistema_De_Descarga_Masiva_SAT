@@ -27,19 +27,36 @@ public static class ControlConsultaRepo
     }
 
     // Cambia ultimaConsulta (equivale al UPDATE que hacías en SSMS)
-    public static void Fijar(string tipo, DateTime fecha)
+    public static int FijarPorRFC(string rfc, DateTime fecha)
     {
-        using (var conn = new SqlConnection(cn))
-        using (var cmd = new SqlCommand(
-            "UPDATE ControlConsultasSAT SET ultimaConsulta = @fecha WHERE tipo = @tipo", conn))
-        {
-            cmd.Parameters.Add("@tipo", SqlDbType.VarChar, 15).Value = tipo;
-            cmd.Parameters.Add("@fecha", SqlDbType.DateTime2).Value = fecha;
-            conn.Open();
+       const string sql = @"
+            UPDATE ControlConsultasPorRFC
+            SET ultimaConsulta = @fecha
+            WHERE RFC = @rfc;
 
-            if (cmd.ExecuteNonQuery() == 0)
-                throw new Exception("No existe configuración para el tipo " + tipo);
+               DECLARE @n INT = @@ROWCOUNT;
+    
+            IF @n = 0
+                BEGIN
+                    INSERT INTO ControlConsultasPorRFC (RFC, tipo, UltimaConsulta)
+                           VALUES (@rfc, 'RECIBIDO', @fecha),
+                                  (@rfc, 'EMITIDO', @fecha),
+                                  (@rfc, 'SOLICITANTE', @fecha);
+                
+            SET @n = 3;
+            END
+            SELECT @n;";
+        using (var conn = new SqlConnection(cn))
+        using (var cmd = new SqlCommand(sql, conn))
+        {
+            cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc;
+            cmd.Parameters.Add("@fecha", SqlDbType.DateTime).Value = fecha;
+            conn.Open();
+            return
+                Convert.ToInt32(cmd.ExecuteScalar());
+
         }
+
     }
     public static void FijarRfc(string tipo, string rfc)
     {
@@ -47,7 +64,7 @@ public static class ControlConsultaRepo
         using (var cmd = new SqlCommand(
             "UPDATE ControlRFCSAT SET RFC = @rfc WHERE tipo = @tipo", conn))
         {
-            cmd.Parameters.Add("@tipo", SqlDbType.VarChar, 15).Value = tipo;
+            cmd.Parameters.Add("@tipo", SqlDbType.VarChar, 15).Value = tipo;   
             cmd.Parameters.Add("@rfc", SqlDbType.NVarChar, 15).Value = rfc;
             conn.Open();
 

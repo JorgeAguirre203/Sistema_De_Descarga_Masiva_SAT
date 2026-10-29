@@ -22,43 +22,45 @@ public class ControlController : Controller
     }
 
     [HttpPost]
-    public JsonResult Fijar(string tipo, string modo, string fecha)
+    // POST /Control/FijarFechaRfc  (rfc, modo = actual|fecha, fecha)
+    // Aplica la fecha a todos los tipos del RFC.
+    
+    public JsonResult Fijar(string rfc, string modo, string fecha)
     {
         try
         {
-            if (tipo != "RECIBIDO" && tipo != "EMITIDO")
-                return Json(new { ok = false, error = "Tipo no válido." });
+            rfc = (rfc ?? "").Trim().ToUpperInvariant();
+
+            if (rfc.Length < 12 || rfc.Length > 13)
+                return Json(new { ok = false, error = "RFC no válido." });
 
             DateTime nueva;
 
-            if (modo == "actual")    // if que valida que la variable modo sea de que tipo si actual con el boton en la pagina o de modo fecha y cambiarla a una anterior
+            if (modo == "actual")
             {
-                nueva = DateTime.Today;          // si es actual la pone en el dia de hoy con la hora 00:00:00
+                nueva = DateTime.Today;
             }
             else if (modo == "fecha")
             {
-                DateTime f;
-                // El input datetime-local manda "2025-02-10T12:00"
                 if (!DateTime.TryParseExact(
                         fecha,
                         new[] { "yyyy-MM-ddTHH:mm", "yyyy-MM-ddTHH:mm:ss" },
                         CultureInfo.InvariantCulture,
                         DateTimeStyles.None,
-                        out f))
+                        out nueva))
                     return Json(new { ok = false, error = "Fecha no válida." });
 
-                if (f > DateTime.Now)
+                if (nueva > DateTime.Now)
                     return Json(new { ok = false, error = "La fecha no puede ser futura." });
-
-                nueva = f;
             }
             else
             {
                 return Json(new { ok = false, error = "Datos incompletos." });
             }
 
-            ControlConsultaRepo.Fijar(tipo, nueva);
-            return Json(new { ok = true, fecha = nueva.ToString("yyyy-MM-dd HH:mm:ss") });
+            int filas = ControlConsultaRepo.FijarPorRFC(rfc, nueva);
+
+            return Json(new { ok = true, fecha = nueva.ToString("yyyy-MM-dd HH:mm"), filas = filas });
         }
         catch (Exception ex)
         {
@@ -68,7 +70,7 @@ public class ControlController : Controller
     [HttpPost]
     public JsonResult FijarRfc(string tipo, string rfc)
     {
-        try
+        try  
         {
             ControlConsultaRepo.FijarRfc(tipo, rfc);
             return Json(new { ok = true, rfc = rfc });
