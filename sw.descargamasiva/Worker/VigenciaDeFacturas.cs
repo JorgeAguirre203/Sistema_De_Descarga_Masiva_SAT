@@ -16,6 +16,7 @@ public class VigenciaFacturasWorker : BackgroundService
 {
 
     public static readonly TimeSpan RetrasoInicial = TimeSpan.FromSeconds(60);
+
     protected override async Task ExecuteAsync(
         CancellationToken stoppingToken)
     {

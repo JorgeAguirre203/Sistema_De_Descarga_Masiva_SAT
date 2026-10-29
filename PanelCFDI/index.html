@@ -130,6 +130,7 @@
                     </option>
                     </select>
 
+
                     <select id="mes"
                             aria-label="Filtrar por mes">
 
@@ -762,7 +763,16 @@ $('btnRfcSolicitante').onclick = () =>
 
                                     $('mes').value =
                                         actual;
+                                    
 
+                                    const rfcActual = $('rfcFiltro').value;
+
+                                    $('rfcFiltro').innerHTML =
+                                        '<option value="">Todos los RFC</option>' +
+                                        receptores.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
+
+                                    $('rfcFiltro').value = receptores.includes(rfcActual) ? rfcActual : '';
+                                    $('rfcFiltro').hidden = receptores.length < 2;
 
                                     // -------------------------------------------------
                                     // TABLA DE CFDI
@@ -775,11 +785,15 @@ $('btnRfcSolicitante').onclick = () =>
 
                                                 <tr
                                                     data-mes="${esc(c.fecha.slice(0, 7))}"
-                                                    data-tipo="${esc(c.tipo)}">
+                                                    data-tipo="${esc(c.tipo)}"
+                                            data-receptor="${esc(c.receptor)}">
 
                                                     <td>
                                                         ${fechaMx(c.fecha)}
                                                     </td>
+                                             <td class="uuid">
+                                                ${esc(c.receptor)}
+                                            </td>
 
 
                                                     <td class="emisor">
@@ -950,11 +964,18 @@ $('btnRfcSolicitante').onclick = () =>
                                             )
 
                                             &&
-
                                             (
                                                 !$('tipo').value ||
                                                 f.dataset.tipo ===
                                                 $('tipo').value
+                                            )
+
+                                            &&
+
+                                            (
+                                                !$('rfcFiltro').value ||
+                                                f.dataset.receptor ===
+                                                $('rfcFiltro').value
                                             );
 
 
@@ -994,7 +1015,7 @@ $('btnRfcSolicitante').onclick = () =>
                                 // EVENTOS DE FILTROS
                                 // =====================================================
 
-                                ['buscar', 'mes', 'tipo']
+                                    ['buscar', 'mes', 'tipo', 'rfcFiltro']
                                     .forEach(
                                         id =>
                                             $(id).addEventListener(
