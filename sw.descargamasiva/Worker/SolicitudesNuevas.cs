@@ -16,7 +16,7 @@ namespace sw.descargamasiva.Worker
         public class segundoprocesoworker : BackgroundService
         {
             // Cada cuánto se piden CFDI nuevos para todos los RFC.
-            private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(2);
+            private static readonly TimeSpan Intervalo = TimeSpan.FromHours(12);
            
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
