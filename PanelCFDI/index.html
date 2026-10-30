@@ -262,39 +262,8 @@
 
                     </div>
 
-                    <!-- RFC -->
-                    <div class="config-bloque" id="controlrfc">
-
-                        <h3>RFC</h3>
-                        <p class="ayuda">RFC con el que se autentica y se filtran las solicitudes.</p>
-
-                        <div class="campo">
-                            <label for="rfcSolicitante">RFC solicitante</label>
-                            <div class="campo-fila">
-                                <input type="text" id="rfcSolicitante" class="rfc-input" maxlength="13" placeholder="XAXX010101000" autocomplete="off">
-                                <button type="button" id="btnRfcSolicitante" class="btn btn-secundario">Guardar</button>
-                            </div>
-                        </div>
-
-                        <div class="campo">
-                            <label for="rfcRecibido">RFC receptor (recibidos)</label>
-                            <div class="campo-fila">
-                                <input type="text" id="rfcRecibido" class="rfc-input" maxlength="13" placeholder="XAXX010101000" autocomplete="off">
-                                <button type="button" id="btnRfcRecibido" class="btn btn-secundario">Guardar</button>
-                            </div>
-                        </div>
-
-                        <div class="campo">
-                            <label for="rfcEmitido">RFC emisor (emitidos)</label>
-                            <div class="campo-fila">
-                                <input type="text" id="rfcEmitido" class="rfc-input" maxlength="13" placeholder="XAXX010101000" autocomplete="off">
-                                <button type="button" id="btnRfcEmitido" class="btn btn-secundario">Guardar</button>
-                            </div>
-                        </div>
-
-                        <div id="msgRfc" class="mensaje" aria-live="polite"></div>
-
-                    </div>
+                   
+                   
 
                 </div>
 
@@ -490,14 +459,6 @@ async function guardarRfc(url, tipo, idInput) {
 }
 
 
-$('btnRfcRecibido').onclick = () =>
-                            guardarRfc('/Control/FijarRfc', 'RECIBIDO', 'rfcRecibido');
-
-$('btnRfcEmitido').onclick = () =>
-                            guardarRfc('/Control/FijarRfc', 'EMISOR', 'rfcEmitido');
-
-$('btnRfcSolicitante').onclick = () =>
-                            guardarRfc('/Control/FijarRfc', 'SOLICITANTE', 'rfcSolicitante');
 
 
                                         // =====================================================

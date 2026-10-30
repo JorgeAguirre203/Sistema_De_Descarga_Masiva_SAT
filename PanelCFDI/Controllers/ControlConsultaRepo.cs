@@ -64,6 +64,14 @@ public static class ControlConsultaRepo
 
                 SET @n = 3;
             END
+                
+                INSERT INTO ControlRFCSAT (RFC, tipo, activo)
+                VALUES (@rfc, 'RECIBIDO', 1),
+                       (@rfc, 'EMISOR', 1),
+                       (@rfc, 'SOLICITANTE', 1);
+
+                SET @n = 3;
+            
 
             SELECT @n;";
 
