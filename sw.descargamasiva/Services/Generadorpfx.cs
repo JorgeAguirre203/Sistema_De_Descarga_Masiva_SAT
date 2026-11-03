@@ -641,11 +641,10 @@ namespace sw.descargamasiva.Services
                 try
                 {
                     X509Certificate2 certificado =
-                        new X509Certificate2(
-                            pfxBytes,
-                            clave,
-                            X509KeyStorageFlags.MachineKeySet |
-                            X509KeyStorageFlags.Exportable);
+     new X509Certificate2(
+         pfxBytes,
+         clave,
+         X509KeyStorageFlags.EphemeralKeySet);
 
                     if (!certificado.HasPrivateKey)
                     {

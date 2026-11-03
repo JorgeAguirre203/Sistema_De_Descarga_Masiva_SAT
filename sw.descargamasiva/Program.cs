@@ -42,7 +42,7 @@ namespace sw.descargamasiva
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<segundoprocesoworker>();   // CFDI recibidos
-                    services.AddHostedService<tercerprocesoworker>();    // CFDI emitidos
+                    services.AddHostedService<tercerprocesoworker>();    // CFDI emitidos  
                     services.AddHostedService<PrimerProcesoWorker>();    // solicitudes pendientes
                     services.AddHostedService<VigenciaFacturasWorker>(); // vigencia de CFDI
                 })
