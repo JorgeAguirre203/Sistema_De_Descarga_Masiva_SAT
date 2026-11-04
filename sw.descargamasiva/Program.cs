@@ -41,10 +41,10 @@ namespace sw.descargamasiva
                 .UseWindowsService()
                 .ConfigureServices(services =>
                 {
-                    services.AddHostedService<segundoprocesoworker>();   // CFDI recibidos
-                    services.AddHostedService<tercerprocesoworker>();    // CFDI emitidos  
+                   services.AddHostedService<segundoprocesoworker>();   // CFDI recibidos
+                   services.AddHostedService<tercerprocesoworker>();    // CFDI emitidos  
                     services.AddHostedService<PrimerProcesoWorker>();    // solicitudes pendientes
-                    services.AddHostedService<VigenciaFacturasWorker>(); // vigencia de CFDI
+                   services.AddHostedService<VigenciaFacturasWorker>(); // vigencia de CFDI
                 })
                 .Build()
                 .Run();

@@ -18,7 +18,7 @@ namespace sw.descargamasiva.Worker
             // Cada cuánto se piden CFDI nuevos para todos los RFC.
             private static readonly TimeSpan Intervalo = TimeSpan.FromHours(12);
             private static readonly TimeSpan RetrasoInicial = TimeSpan.FromSeconds(20);
-            protected override async Task ExecuteAsync(
+            protected override async Task ExecuteAsync(     
                 CancellationToken stoppingToken)
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

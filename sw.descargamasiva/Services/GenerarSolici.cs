@@ -24,7 +24,7 @@ namespace sw.descargamasiva.Services
         {
             //  Usamos el rfcActual para buscar los datos específicos de este contribuyente en la BD
             RfcReceptor = rfcActual;
-            RfcEmisor = rfcActual;
+            RfcEmisor = null;
             RfcSolicitante = rfcActual; 
 
             // Obtenemos la última fecha de consulta vinculada estrictamente a este RFC
@@ -58,7 +58,7 @@ namespace sw.descargamasiva.Services
             //      Generamos el XML inyectando el rfcActual en lugar de datos quemados
             string xmlSolicitud = solicitud.Generate(
                 certificate: certificate,
-                rfcEmisor: rfcActual,
+                rfcEmisor: null,
                 rfcReceptor: rfcActual,
                 rfcSolicitante: rfcActual,
                 fechaInicial: fechaInicial.ToString("yyyy-MM-ddTHH:mm:ss"),

@@ -20,7 +20,7 @@ public class CfdiController : Controller
         var datos = CfdiRepo.ListarCfdi(max);
 
         // Agrega el enlace de descarga del XML a cada comprobante
-        var salida = new System.Collections.Generic.List<object>();
+        var salida = new System.Collections.Generic.List<object>();    //POR CADA FILA EN DATOS QUE EQUIVALE A LOS DATOS EXTRAIDOS DE CFDI REPO HACE  LO SIGUIENTE
         foreach (CfdiFila c in datos)
         {
             salida.Add(new
