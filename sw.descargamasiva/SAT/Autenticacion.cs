@@ -76,7 +76,6 @@ namespace sw.descargamasiva
             return soap_request;
         }
         #endregion
-
         public override string GetResult(XmlDocument xmlDoc)
         {
             string tokenCodificado =

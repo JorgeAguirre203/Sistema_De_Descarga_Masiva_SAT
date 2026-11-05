@@ -295,13 +295,10 @@ namespace sw.descargamasiva.Services
             }
         }
 
-
-        // =========================================================
         // GENERAR PFX CON LOS DATOS RECIBIDOS
         //
         // La salida se genera en la carpeta que recibe el método.
         // Los PEM se eliminan después de ejecutar OpenSSL.
-        // =========================================================
 
         private static void CrearPfx(
             string rutaCer,
@@ -366,15 +363,8 @@ namespace sw.descargamasiva.Services
                     File.Delete(rutaPfx);
                 }
 
-                // -------------------------------------------------
                 // PASO 1: Convertir la clave .key a PEM.
-                //
-                // El .key del SAT es PKCS#8 CIFRADO. NO se usa
-                // -nocrypt: ese parámetro le dice a OpenSSL que la
-                // llave de entrada ya viene sin cifrar y provoca el
-                // error "Field=version, Type=PKCS8_PRIV_KEY_INFO".
-                // Sin -topk8, la salida PEM queda sin cifrar.
-                // -------------------------------------------------
+   
 
                 Console.WriteLine(
                     "Convirtiendo la clave privada a PEM...");
@@ -454,13 +444,10 @@ namespace sw.descargamasiva.Services
             }
         }
 
-
-        // =========================================================
         // EJECUTAR OPENSSL
         // La contraseña se entrega por una variable de entorno
         // del proceso, no como argumento visible en la línea
         // de comandos.
-        // =========================================================
 
         private static void EjecutarComandoOpenSsl(
             string carpetaOpenSsl,
@@ -524,9 +511,7 @@ namespace sw.descargamasiva.Services
         }
 
 
-        // =========================================================
         // CITAR RUTAS PARA LA LINEA DE COMANDOS
-        // =========================================================
 
         private static string Citar(string valor)
         {
@@ -534,9 +519,7 @@ namespace sw.descargamasiva.Services
         }
 
 
-        // =========================================================
         // ELIMINAR ARCHIVOS TEMPORALES
-        // =========================================================
 
         private static void EliminarArchivo(string ruta)
         {
@@ -557,14 +540,13 @@ namespace sw.descargamasiva.Services
         }
 
 
-        // =========================================================
         // CARGAR FIEL POR RFC
         //
         // Lee la FIEL de ControlRFCSAT, genera un PFX temporal
         // (carpeta con GUID, así varios workers no se pisan) y
         // devuelve el certificado. Quien lo reciba debe hacer
         // Dispose() cuando termine de usarlo.
-        // =========================================================
+
 
         public static X509Certificate2 Cargar(string rfc)
         {

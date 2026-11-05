@@ -10,7 +10,6 @@ namespace sw.descargamasiva.SAT
 {
     internal class CrearAutorizacionSAT
     {
-        
         private readonly X509Certificate2 certificate;
 
         private string authorization;
@@ -30,20 +29,17 @@ namespace sw.descargamasiva.SAT
                     nameof(certificate));
         }
 
-
         public string Obtener()
         {
            
             // SI NO EXISTE TOKEN
          
-
             if (string.IsNullOrWhiteSpace(authorization))
             {
                 return Renovar();
             }
 
-
-            
+   
             // COMPROBAR SI YA DEBEMOS RENOVARLO
          
 
@@ -62,7 +58,6 @@ namespace sw.descargamasiva.SAT
 
             return authorization;
         }
-
 
         private string Renovar()
         {

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace sw.descargamasiva.Services
 {
-    // Redirige Console.WriteLine a un archivo por día, para cuando el programa
-    // corre como servicio de Windows (sin ventana de consola).
-    //
-    // Carpeta: C:\ProgramData\DescargaMasivaSAT\logs\log-AAAAMMDD.txt
+    // Redirige Console.WriteLine a un archivo por día, para cuando el programa corre como windows service
+
+ 
+    // Carpeta: C:\ProgramData\DescargaMasivaSAT\logs\
     internal static class LogArchivo
     {
         const int DiasAConservar = 30;

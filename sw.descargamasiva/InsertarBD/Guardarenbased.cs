@@ -94,9 +94,6 @@ namespace sw.descargamasiva.InsertarBD
         }
 
 
-
-
-
         public static DateTime ObtenerUltimaConsultaPorRfc(string rfc, string tipo)
         {
             string query = @"
@@ -242,7 +239,6 @@ namespace sw.descargamasiva.InsertarBD
 
             }
         }
-
 
 
         public static void ActualizarUltimaConsulta(

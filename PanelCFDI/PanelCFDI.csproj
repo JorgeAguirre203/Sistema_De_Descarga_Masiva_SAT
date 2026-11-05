@@ -152,7 +152,14 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="index.html" />
-    <Content Include="logo.png" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Javascript\barra-lateral.js" />
+    <Content Include="Javascript\cfdi.js" />
+    <Content Include="Javascript\fechas-rfc.js" />
+    <Content Include="Javascript\formato.js" />
+    <Content Include="Javascript\main.js" />
+    <Content Include="Javascript\navegacion.js" />
+    <Content Include="Javascript\utils.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -187,7 +194,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Javascript\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
