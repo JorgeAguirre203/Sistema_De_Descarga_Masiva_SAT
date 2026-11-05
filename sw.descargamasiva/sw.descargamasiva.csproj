@@ -213,7 +213,6 @@
     <Compile Include="InsertarBD\GuardarXmlBD.cs" />
     <Compile Include="InsertarBD\InsertarRevisarBD.cs" />
     <Compile Include="InsertarBD\Guardarenbased.cs" />
-    <Compile Include="InsertarBD\Solipendientes.cs" />
     <Compile Include="SAT\CrearAutorizacionSAT.cs" />
     <Compile Include="SAT\SolicitudEmitidos.cs" />
     <Compile Include="SAT\DescargarSolicitud.cs" />
