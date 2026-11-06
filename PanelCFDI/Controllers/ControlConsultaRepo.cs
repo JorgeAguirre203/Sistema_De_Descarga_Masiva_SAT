@@ -88,17 +88,17 @@ public static class ControlConsultaRepo
     public static int EliminaRFC(string rfc)
     {
         const string sql = @"
-           DELETE FROM ControlConsultasPorRFC WHERE RFC = @RFC;
-           DELETE FROM ControlRFCSAT WHERE RFC = @RFC;
-           ";
+        
+            DELETE FROM dbo.ControlConsultasPorRFC WHERE RFC = @rfc;
+            DELETE FROM dbo.ControlRFCSAT          WHERE RFC = @rfc;
+        ";
 
         using (var conn = new SqlConnection(cn))
         using (var cmd = new SqlCommand(sql, conn))
         {
-            cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc;
-         
+            cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc.Trim().ToUpperInvariant();
             conn.Open();
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            return cmd.ExecuteNonQuery();   // total de filas borradas
         }
     }
 
