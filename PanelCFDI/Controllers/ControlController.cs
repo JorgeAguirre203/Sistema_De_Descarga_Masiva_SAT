@@ -22,7 +22,6 @@ public class ControlController : Controller
         }
     }
 
-
     // POST /Control/FijarFechaRfc  (rfc, modo = actual|fecha, fecha)
     // Aplica la fecha a todos los tipos del RFC.
     [HttpPost]
@@ -70,7 +69,6 @@ public class ControlController : Controller
         }
     }
 
-
     // POST /Control/FijarRfc  (tipo, rfc) -> ControlRFCSAT
     [HttpPost]
     public JsonResult FijarRfc(string tipo, string rfc)
@@ -83,6 +81,28 @@ public class ControlController : Controller
         catch (Exception ex)
         {
             return Json(new { ok = false, error = ex.Message });
+        }
+    }
+
+
+    [HttpPost]
+    public JsonResult EliminarRfc(string rfc)
+    {
+        if (string.IsNullOrWhiteSpace(rfc))
+            return Json(new { ok = false, mensaje = "Escribe el RFC a eliminar." });
+
+        try
+        {
+            int filas = ControlConsultaRepo.EliminaRFC(rfc);
+
+            if (filas == 0)
+                return Json(new { ok = false, mensaje = "Ese RFC no existe." });
+
+            return Json(new { ok = true, mensaje = "RFC eliminado correctamente." });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { ok = false, mensaje = "Error: " + ex.Message });
         }
     }
 }

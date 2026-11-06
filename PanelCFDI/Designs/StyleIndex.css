@@ -31,6 +31,7 @@
     /* Error (único color fuera de la paleta, solo para fallos) */
     --rojo: #c2395c;
     --rojo-claro: #fdeaf0;
+    --rojo-medio: #f9d3e0;
     --sombra-sm: 0 1px 2px rgba(14, 42, 56, 0.05);
     --sombra: 0 14px 34px -18px rgba(14, 70, 95, 0.28);
     --sombra-lateral: 18px 0 40px -22px rgba(14, 70, 95, 0.35);
@@ -556,12 +557,20 @@ h2 {
     font-size: 13.5px;
     letter-spacing: 0.03em;
     text-transform: uppercase;
+   
 }
 
     .rfc-input::placeholder {
         text-transform: none;
     }
 
+.rfcintervalo {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    width: 170px;
+}
 
 /* =========================================================
    CAMPOS (inputs y selects)
@@ -645,6 +654,16 @@ h2 {
 
     .btn-secundario:hover {
         background: var(--azul-medio);
+    }
+
+.btn-intervalos {
+    color: var(--rojo);
+    background: var(--rojo-claro); /*Boton de intervalos*/
+    border: 1px solid transparent;
+    margin-left: 0px;
+}
+    .btn-intervalos:hover {
+        background: var(--rojo-medio);
     }
 
 
@@ -981,6 +1000,7 @@ tbody tr {
     grid-template-columns: 150px 1fr 210px auto auto;
     align-items: center;
     gap: 10px;
+    flex-direction: column;
 }
 
 .fecha-fila {
@@ -1022,9 +1042,26 @@ tbody tr {
 }
 
 .fecha-nueva {
-    grid-template-columns: 150px 210px auto;
-    justify-content: start;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
+
+.fila-accion {
+    display: grid;
+    grid-template-columns: 240px 240px 180px; /* RFC | fecha o botón | botón */
+    gap: 12px;
+    align-items: center;
+}
+
+    .fila-accion input,
+    .fila-accion .btn {
+        width: 100%;
+    }
+
+    .fila-accion .btn {
+        white-space: nowrap;
+    }
 
 
 /* =========================================================

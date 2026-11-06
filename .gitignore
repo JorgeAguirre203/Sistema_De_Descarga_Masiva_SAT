@@ -16,3 +16,7 @@ secretos.config
 # Paquetes descargados del SAT
 Paquetes/
 DescargaMasivaSatVISUAL/
+
+# Backups de la base de datos
+sw.descargamasiva/BD/Backup_BD_Datos/
+Backup_BD_Datos/

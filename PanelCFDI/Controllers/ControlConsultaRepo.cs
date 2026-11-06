@@ -85,6 +85,23 @@ public static class ControlConsultaRepo
         }
     }
 
+    public static int EliminaRFC(string rfc)
+    {
+        const string sql = @"
+           DELETE FROM ControlConsultasPorRFC WHERE RFC = @RFC;
+           DELETE FROM ControlRFCSAT WHERE RFC = @RFC;
+           ";
+
+        using (var conn = new SqlConnection(cn))
+        using (var cmd = new SqlCommand(sql, conn))
+        {
+            cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc;
+         
+            conn.Open();
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+    }
+
 
     // ---------- RFC por tipo (ControlRFCSAT) ----------
 

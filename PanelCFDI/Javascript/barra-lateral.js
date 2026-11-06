@@ -1,6 +1,4 @@
-﻿// =====================================================
-// BARRA LATERAL: fijar / soltar (se recuerda en el navegador)
-// =====================================================
+﻿// BARRA LATERAL: fijar / soltar (se recuerda en el navegador)
 
 (function () {
 

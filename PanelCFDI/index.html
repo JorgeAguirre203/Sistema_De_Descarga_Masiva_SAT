@@ -230,9 +230,24 @@
                         <div class="vacio" id="vacio-fechas">Aún no hay RFC con fecha de búsqueda. Agrega uno abajo.</div>
 
                         <div class="fecha-nueva">
-                            <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="RFC" aria-label="RFC" autocomplete="off">
-                            <input type="datetime-local" id="nuevaFecha" aria-label="Buscar desde">
-                            <button type="button" id="btnAgregarFecha" class="btn btn-secundario">Agregar</button>
+
+                            
+                                <div class="fila-accion">
+                                    <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="AGREGAR RFC" aria-label="RFC" autocomplete="off">
+                                    <input type="datetime-local" id="nuevaFecha" aria-label="Buscar desde">
+                                    <button type="button" id="btnAgregarFecha" class="btn btn-secundario">Agregar</button>
+                                </div>
+
+                                <div class="fila-accion">
+                                    <input type="text" id="Eliminarfc" class="rfceliminar" maxlength="13" placeholder="RFC A ELIMINAR" aria-label="RFC" autocomplete="off">
+                                    <button type="button" id="DropRFC" class="btn btn-intervalos">Eliminar RFC</button>
+                                </div>
+
+                                <div class="fila-accion">
+                                    <input type="text" id="nuevointervalo" class="rfcintervalo" maxlength="13" placeholder="RFC A MODIFICAR" aria-label="RFC" autocomplete="off">
+                                    <button type="button" id="Modificar-intervalos" class="btn btn-intervalos">Modificar intervalos </button>
+                                </div>
+
                         </div>
 
                         <div id="msg" class="mensaje" aria-live="polite"></div>
