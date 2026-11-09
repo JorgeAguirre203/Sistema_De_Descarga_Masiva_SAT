@@ -120,6 +120,40 @@ namespace sw.descargamasiva.InsertarBD
                 return Convert.ToDateTime(resultado);
             }
         }
+
+
+
+
+        public static int ObtenerIntervalo(string rfc, string tipo)
+        {
+            const string query = @"
+        SELECT intervalo
+        FROM dbo.ControlConsultasPorRFC
+        WHERE RFC = @rfc AND tipo = @tipo;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.Add("@rfc", SqlDbType.NVarChar, 15).Value = rfc;
+                cmd.Parameters.Add("@tipo", SqlDbType.VarChar, 15).Value = tipo;
+
+                conn.Open();
+                object resultado = cmd.ExecuteScalar();
+
+                if (resultado == null)
+                    throw new Exception(
+                        $"No existe configuración de intervalo para el RFC: {rfc} y el tipo: {tipo}");
+
+                if (resultado == DBNull.Value)
+                    return 1;
+
+                return Convert.ToInt32(resultado);
+            }
+        }
+
+
+
+
         public static void ActualizarUltimaConsultaPorRfc(string rfc, string tipo, DateTime nuevaFecha)
         {
             string query = @"

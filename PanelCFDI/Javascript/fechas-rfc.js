@@ -4,6 +4,7 @@ import { esc } from './formato.js';
 // FECHA DE BÚSQUEDA POR RFC (ControlConsultasPorRFC)
 // Una fecha por RFC: se aplica a todos sus tipos
 // (RECIBIDO, EMITIDO y SOLICITANTE).
+// El intervalo (en días) también es uno por RFC y se aplica a todos sus tipos.
 
 const nombreTipoConsulta = { RECIBIDO: 'Recibidos', EMITIDO: 'Emitidos', SOLICITANTE: 'Solicitante' };
 
@@ -36,6 +37,9 @@ function pintarFechas(filas) {
         const tipos = porRfc[rfc];
         const fechas = [...new Set(tipos.map(t => t.fecha))];
 
+        // Intervalo actual del RFC (se toma el de RECIBIDO; si no hay, el primero)
+        const intervalo = (tipos.find(t => t.tipo === 'RECIBIDO') || tipos[0]).intervalo ?? 1;
+
         // Si todos los tipos tienen la misma fecha se muestra una sola;
         // si no, se muestra la de cada tipo.
         const detalle = fechas.length === 1
@@ -51,6 +55,10 @@ function pintarFechas(filas) {
                 <input type="datetime-local" aria-label="Nueva fecha para ${esc(rfc)}">
                 <button type="button" class="btn btn-principal" data-accion="fecha">Aplicar</button>
                 <button type="button" class="btn btn-secundario" data-accion="hoy">Hoy</button>
+                <input type="number" class="input-intervalo" min="1" max="365" step="1"
+                       value="${intervalo}" aria-label="Intervalo en días para ${esc(rfc)}"
+                       title="Intervalo de búsqueda (días)">
+                <button type="button" class="btn btn-secundario" data-accion="intervalo">Guardar intervalo</button>
             </div>`;
     }).join('');
 
@@ -86,6 +94,29 @@ async function fijarFecha(rfc, datos) {
     }
 }
 
+async function fijarIntervalo(rfc, intervalo) {
+    try {
+        const resp = await fetch('/Control/FijarIntervaloRfc', {
+            method: 'POST',
+            body: new URLSearchParams({ rfc, intervalo })
+        });
+
+        if (!resp.ok) throw new Error('/Control/FijarIntervaloRfc respondió ' + resp.status);
+
+        const r = await resp.json();
+
+        avisoFecha(r.ok ? 'ok' : 'err',
+            r.ok
+                ? rfc + ': intervalo de ' + r.intervalo + (r.intervalo === 1 ? ' día guardado' : ' días guardado')
+                : r.error);
+
+        if (r.ok) cargar();
+    }
+    catch (e) {
+        avisoFecha('err', e.message);
+    }
+}
+
 $('tablaFechas').addEventListener('click', e => {
 
     const b = e.target.closest('button[data-accion]');
@@ -101,7 +132,14 @@ $('tablaFechas').addEventListener('click', e => {
         return;
     }
 
-    const v = fila.querySelector('input').value;
+    if (b.dataset.accion === 'intervalo') {
+        const n = parseInt(fila.querySelector('.input-intervalo').value, 10);
+        if (!Number.isInteger(n) || n < 1 || n > 365)
+            return avisoFecha('err', 'El intervalo debe ser un número de 1 a 365 días.');
+        return fijarIntervalo(rfc, n);
+    }
+
+    const v = fila.querySelector('input[type="datetime-local"]').value;
     if (!v) return avisoFecha('err', 'Elige una fecha para ' + rfc + '.');
 
     fijarFecha(rfc, { modo: 'fecha', fecha: v });

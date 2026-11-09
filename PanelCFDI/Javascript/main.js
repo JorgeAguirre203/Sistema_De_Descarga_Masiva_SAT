@@ -1,7 +1,9 @@
 ﻿import './navegacion.js';
 import './barra-lateral.js';
+import './tema.js';
 import { cargar } from './fechas-rfc.js';
 import { pintar, cargarDatos } from './cfdi.js';
+
 
 // =========================================================
 // ARRANQUE

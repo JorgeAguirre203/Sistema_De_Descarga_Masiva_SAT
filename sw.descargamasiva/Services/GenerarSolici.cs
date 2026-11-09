@@ -40,8 +40,8 @@ namespace sw.descargamasiva.Services
                 Console.WriteLine($"RFC {rfcActual} (RECIBIDOS) al día. Última consulta: {fechaInicial:yyyy-MM-dd HH:mm:ss}");
                 return null;
             }
-
-            fechaFinal = fechaInicial.AddHours(24);
+            int intervalo = Guardarenbased.ObtenerIntervalo(rfcActual, "RECIBIDO");  //se obtiene el intervalo de dias pa la consulta en base a la base de datos.
+            fechaFinal = fechaInicial.AddDays(intervalo);
 
             if (fechaFinal > limite)
                 fechaFinal = limite;

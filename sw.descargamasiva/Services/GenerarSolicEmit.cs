@@ -34,7 +34,8 @@ namespace sw.descargamasiva.Services
                 return null;
             }
 
-            fechaFinal = fechaInicial.AddHours(24);
+            int intervalo = Guardarenbased.ObtenerIntervalo(rfcActual, "EMITIDO");  //se obtiene el intervalo de dias pa la consulta en base a la base de datos.
+            fechaFinal = fechaInicial.AddDays(intervalo);
 
             if (fechaFinal > limite)
                 fechaFinal = limite;

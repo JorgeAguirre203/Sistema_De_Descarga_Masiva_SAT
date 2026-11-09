@@ -44,7 +44,57 @@
     --texto: "Plus Jakarta Sans", "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
     --titulo: "Plus Jakarta Sans", "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
+/* =========================================================
+   MODO OSCURO
+   ========================================================= */
 
+html[data-tema="oscuro"] {
+    color-scheme: dark;
+    --fondo: #0b1720;
+    --superficie: #112230;
+    --superficie-2: #152a3a;
+    --hover: #183246;
+    --tinta: #e6f1f7;
+    --suave: #9bb4c3;
+    --muted: #6f8b9b;
+    --acento: #1fb577;
+    --acento-hover: #29c586;
+    --acento-claro: rgba(34, 181, 115, 0.16);
+    --acento-texto: #5fdba4;
+    --acento-vivo: #2fd38a;
+    --sobre-acento: #04221a;
+    --azul: #4db5ea;
+    --azul-claro: rgba(63, 169, 224, 0.16);
+    --azul-medio: rgba(63, 169, 224, 0.28);
+    --azul-texto: #8fd0f2;
+    --linea: #1e3547;
+    --linea-fuerte: #2b475c;
+    --rojo: #ff7a9c;
+    --rojo-claro: rgba(194, 57, 92, 0.2);
+    --rojo-medio: rgba(194, 57, 92, 0.32);
+    --sombra-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --sombra: 0 14px 34px -18px rgba(0, 0, 0, 0.7);
+    --sombra-lateral: 18px 0 40px -22px rgba(0, 0, 0, 0.8);
+}
+
+    /* Estos dos tenían #ffffff fijo en el CSS claro */
+    html[data-tema="oscuro"] .nav-item.activo .nav-badge,
+    html[data-tema="oscuro"] .nota strong {
+        background: var(--superficie);
+    }
+
+/* Icono del botón: luna en claro, sol en oscuro */
+.icono-sol {
+    display: none;
+}
+
+html[data-tema="oscuro"] .icono-sol {
+    display: block;
+}
+
+html[data-tema="oscuro"] .icono-luna {
+    display: none;
+}
 
 /* =========================================================
    BASE

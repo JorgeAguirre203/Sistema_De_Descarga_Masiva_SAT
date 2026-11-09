@@ -84,6 +84,31 @@ public class ControlController : Controller
         }
     }
 
+    [HttpPost]
+    public JsonResult FijarIntervaloRfc(string rfc, int intervalo)
+    {
+        try
+        {
+            rfc = (rfc ?? "").Trim().ToUpperInvariant();
+
+            if (rfc.Length < 12 || rfc.Length > 13)
+                return Json(new { ok = false, error = "RFC no válido." });
+
+            if (intervalo < 1 || intervalo > 365)
+                return Json(new { ok = false, error = "El intervalo debe estar entre 1 y 365 días." });
+
+            int filas = ControlConsultaRepo.FijarIntervaloPorRfc(rfc, intervalo);
+
+            if (filas == 0)
+                return Json(new { ok = false, error = "Ese RFC no existe." });
+
+            return Json(new { ok = true, intervalo = intervalo, filas = filas });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { ok = false, error = ex.Message });
+        }
+    }
 
     [HttpPost]
     public JsonResult EliminarRfc(string rfc)

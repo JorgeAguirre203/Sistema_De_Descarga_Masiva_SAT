@@ -44,6 +44,25 @@ public static class ControlConsultaRepo
         return lista;
     }
 
+
+
+    public static int FijarIntervaloPorRfc(string rfc, int intervalo)
+    {
+        const string sql = @"
+        UPDATE dbo.ControlConsultasPorRFC
+        SET intervalo = @intervalo
+        WHERE RFC = @rfc;";
+
+        using (var conn = new SqlConnection(cn))
+        using (var cmd = new SqlCommand(sql, conn))
+        {
+            cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc;
+            cmd.Parameters.Add("@intervalo", SqlDbType.Int).Value = intervalo;
+            conn.Open();
+            return cmd.ExecuteNonQuery();
+        }
+    }
+
     // Cambia la fecha de TODOS los tipos del RFC (RECIBIDO, EMITIDO, SOLICITANTE).
     // Si el RFC no tiene filas, las crea. Devuelve cuántas filas quedaron con la fecha.
     public static int FijarPorRfc(string rfc, DateTime fecha)
