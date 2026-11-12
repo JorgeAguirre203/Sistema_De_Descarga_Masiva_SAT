@@ -145,7 +145,7 @@ namespace sw.descargamasiva.InsertarBD
                         $"No existe configuración de intervalo para el RFC: {rfc} y el tipo: {tipo}");
 
                 if (resultado == DBNull.Value)
-                    return 1;
+                    return 1;   
 
                 return Convert.ToInt32(resultado);
             }

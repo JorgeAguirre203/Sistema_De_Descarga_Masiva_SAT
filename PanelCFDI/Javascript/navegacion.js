@@ -2,7 +2,7 @@
 
 // BARRA LATERAL: CAMBIAR DE VISTA
 
-const vistas = ['resumen', 'comprobantes', 'solicitudes', 'config'];
+const vistas = ['resumen', 'comprobantes', 'solicitudes', 'config','consulta'];
 
 function mostrar(v) {
 

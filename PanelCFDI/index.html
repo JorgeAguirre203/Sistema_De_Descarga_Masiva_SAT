@@ -18,17 +18,17 @@
 
     <!-- Recuerda si la barra lateral estaba fijada (antes de pintar, para evitar parpadeo) -->
     <script>
-            try {
-                if (localStorage.getItem('panelcfdi.lateral.fijada') !== '0') document.documentElement.classList.add('fijada');
-            } catch (e) {
-                document.documentElement.classList.add('fijada');
-            }
+                    try {
+                        if (localStorage.getItem('panelcfdi.lateral.fijada') !== '0') document.documentElement.classList.add('fijada');
+                    } catch (e) {
+                        document.documentElement.classList.add('fijada');
+                    }
 
-            try {
-                var t = localStorage.getItem('panelcfdi.tema');
-                if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
-                document.documentElement.dataset.tema = t;
-            } catch (e) { }
+                    try {
+                        var t = localStorage.getItem('panelcfdi.tema');
+                        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
+                        document.documentElement.dataset.tema = t;
+                    } catch (e) { }
     </script>
 </head>
 
@@ -41,7 +41,7 @@
     <aside class="lateral" id="lateral">
 
         <div class="marca">
-            <span class="logo"><img src="Images/logo.png"    alt="Logo"></span>
+            <span class="logo"><img src="Images/logo.png" alt="Logo"></span>
             <span class="marca-texto">
                 Cfdi Manager
                 <small class="rfc" id="rfc"></small>
@@ -73,6 +73,19 @@
             <button type="button" class="nav-item" data-vista="config" title="Configuración">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1" /></svg>
                 <span class="nav-texto">Configuración</span>
+            </button>
+            <button type="button" class="nav-item" data-vista="consulta" title="Consulta única">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
+                <span class="nav-texto">Consulta única</span>
+            </button>
+            <button type="button" class="nav-item" id="btnExportarPdf" title="Exportar PDF">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 3h8l5 5v13H6z" />
+                    <path d="M14 3v5h5" />
+                    <path d="M12.5 11v6" />
+                    <path d="M10 14.5l2.5 2.5 2.5-2.5" />
+                </svg>
+                <span class="nav-texto">Exportar PDF</span>
             </button>
         </nav>
 
@@ -124,7 +137,7 @@
             </div>
             <p class="nota">Buscando CFDI desde <strong id="desde">—</strong></p>
 
-         <!--añadir un modo oscuro o alternativas de colores mas claros -->
+            <!--añadir un modo oscuro o alternativas de colores mas claros -->
 
 
         </section>
@@ -230,6 +243,7 @@
                 </div>
             </div>
 
+
             <div class="config-caja">
                 <div class="config-cuerpo">
 
@@ -245,19 +259,19 @@
 
                         <div class="fecha-nueva">
 
-                            
-                                <div class="fila-accion">
-                                    <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="AGREGAR RFC" aria-label="RFC" autocomplete="off">
-                                    <input type="datetime-local" id="nuevaFecha" aria-label="Buscar desde">
-                                    <button type="button" id="btnAgregarFecha" class="btn btn-secundario">Agregar</button>
-                                </div>
 
-                                <div class="fila-accion">
-                                    <input type="text" id="Eliminarfc" class="rfceliminar" maxlength="13" placeholder="RFC A ELIMINAR" aria-label="RFC" autocomplete="off">
-                                    <button type="button" id="DropRFC" class="btn btn-intervalos">Eliminar RFC</button>
-                                </div>
+                            <div class="fila-accion">
+                                <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="AGREGAR RFC" aria-label="RFC" autocomplete="off">
+                                <input type="datetime-local" id="nuevaFecha" aria-label="Buscar desde">
+                                <button type="button" id="btnAgregarFecha" class="btn btn-secundario">Agregar</button>
+                            </div>
 
-                               
+                            <div class="fila-accion">
+                                <input type="text" id="Eliminarfc" class="rfceliminar" maxlength="13" placeholder="RFC A ELIMINAR" aria-label="RFC" autocomplete="off">
+                                <button type="button" id="DropRFC" class="btn btn-intervalos">Eliminar RFC</button>
+                            </div>
+
+
 
                         </div>
 
@@ -270,9 +284,93 @@
 
         </section>
 
+
+
+
+
+
+
+
+
+
+        <!-- CONSULTA UNICA -->
+        <section class="vista" id="vista-consulta" hidden>
+
+            <div class="seccion-header">
+                <div>
+                    <h2>Consulta única</h2>
+                    <p class="subtitulo">Haga una consulta manual mediante la siguiente configuracion</p>
+                </div>
+            </div>
+
+              
+
+               
+                   
+
+                       
+                            <h3>Configuración de origen</h3>
+                            <p class="ayuda">Seleccione los parámetros iniciales para la consulta.</p>
+
+                            <div class="consulta-caja">
+                                <div class="consulta-cuerpo">
+
+
+                                    <div class="Columnas-consulta">
+                                        RFC
+                                        <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="AGREGAR RFC" aria-label="RFC" autocomplete="off">
+                                    </div>
+
+
+                                    <div class="Columnas-consulta">
+                                        Fecha Inicial
+
+                                        <input type="datetime-local" aria-label="Nueva fecha para ${esc(rfc)}">
+                                    </div>
+
+
+                                    <div class="Columnas-consulta">
+                                        Fecha Final
+
+                                        <input type="datetime-local" aria-label="Nueva fecha para ${esc(rfc)}">
+                                    </div>
+
+                                    <div class="Columnas-consulta">
+                                        <button type="button" id="DropRFC" class="btn btn-terciario">Consultar</button>
+                                    </div>
+                                   
+
+                                </div>
+
+
+                            </div>
+
+
+                    
+                  
+               
+
+
+
+
+
+
+        </section>
+
+
+
+
+
+
+
+
+
+
+
     </main>
 
     <script type="module" src="Javascript/main.js"></script>
+
 
 </body>
 

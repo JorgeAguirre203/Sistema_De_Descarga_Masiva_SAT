@@ -159,6 +159,8 @@
     <Content Include="Javascript\formato.js" />
     <Content Include="Javascript\main.js" />
     <Content Include="Javascript\navegacion.js" />
+    <Content Include="Javascript\nomina.js" />
+    <Content Include="Javascript\tema.js" />
     <Content Include="Javascript\utils.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />

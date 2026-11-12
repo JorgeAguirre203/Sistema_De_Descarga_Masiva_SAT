@@ -59,7 +59,10 @@ function pintarFechas(filas) {
                        value="${intervalo}" aria-label="Intervalo en días para ${esc(rfc)}"
                        title="Intervalo de búsqueda (días)">
                 <button type="button" class="btn btn-secundario" data-accion="intervalo">Guardar intervalo</button>
-            </div>`;
+                
+               </div>
+            `
+            ;
     }).join('');
 
     $('vacio-fechas').style.display = rfcs.length ? 'none' : 'block';
