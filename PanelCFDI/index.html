@@ -70,15 +70,16 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
                 <span class="nav-texto">Solicitudes al SAT</span><span class="nav-badge" id="nav-sol"></span>
             </button>
+             <button type="button" class="nav-item" data-vista="consulta" title="Consulta única">
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
+     <span class="nav-texto">Consulta única</span>
+ </button>
             <button type="button" class="nav-item" data-vista="config" title="Configuración">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1" /></svg>
                 <span class="nav-texto">Configuración</span>
             </button>
-            <button type="button" class="nav-item" data-vista="consulta" title="Consulta única">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
-                <span class="nav-texto">Consulta única</span>
-            </button>
-            <button type="button" class="nav-item" id="btnExportarPdf" title="Exportar PDF">
+           
+            <button type="button" class="nav-item" id="btnExportarPdf" title="Exportar PDF" data-vista="nomina">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M6 3h8l5 5v13H6z" />
                     <path d="M14 3v5h5" />
@@ -87,6 +88,8 @@
                 </svg>
                 <span class="nav-texto">Exportar PDF</span>
             </button>
+
+
         </nav>
 
         <div class="estado">
@@ -282,6 +285,10 @@
                 </div>
             </div>
 
+
+
+
+
         </section>
 
 
@@ -298,68 +305,103 @@
 
             <div class="seccion-header">
                 <div>
+
                     <h2>Consulta única</h2>
                     <p class="subtitulo">Haga una consulta manual mediante la siguiente configuracion</p>
                 </div>
             </div>
 
-              
 
-               
-                   
+            <p class="ayuda">Seleccione los parámetros iniciales para la consulta.</p>
 
-                       
-                            <h3>Configuración de origen</h3>
-                            <p class="ayuda">Seleccione los parámetros iniciales para la consulta.</p>
+            <div class="tabla">
+                <table>
 
-                            <div class="consulta-caja">
-                                <div class="consulta-cuerpo">
-
-
-                                    <div class="Columnas-consulta">
-                                        RFC
-                                        <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="AGREGAR RFC" aria-label="RFC" autocomplete="off">
-                                    </div>
+                    <thead>
+                        <tr>
+                            <th>RFC</th>
+                            <th>Fecha Inicial</th>
+                            <th>Fecha Final</th>
+                            <th>Tipo de Solicitud</th>
+                            <th></th>
+                        </tr>
 
 
-                                    <div class="Columnas-consulta">
-                                        Fecha Inicial
+                    </thead>
 
-                                        <input type="datetime-local" aria-label="Nueva fecha para ${esc(rfc)}">
-                                    </div>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input class="campo rfc-input" type="text" id="nuevoRfcFecha" maxlength="13" placeholder="RFC CONSULTA" aria-label="RFC" autocomplete="off">
+                            </td>
 
+                            <td>
+                                <input class="campo" type="datetime-local" id="nuevaFecha" aria-label="Buscar desde">
+                            </td>
 
-                                    <div class="Columnas-consulta">
-                                        Fecha Final
+                            <td>
+                                <input class="campo" type="datetime-local" aria-label="Buscar desde">
+                            </td>
 
-                                        <input type="datetime-local" aria-label="Nueva fecha para ${esc(rfc)}">
-                                    </div>
+                            <td>
+                                <select class="campo" aria-label="Tipo de solicitud">
+                                    <option value="">Recibido</option>
+                                    <option value="">Emitidos</option>
 
-                                    <div class="Columnas-consulta">
-                                        <button type="button" id="DropRFC" class="btn btn-terciario">Consultar</button>
-                                    </div>
-                                   
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn btn-terciario" aria-label="Buscar desde">Consultar</button>
+                            </td>
+                        </tr>
+                    </tbody>
 
-                                </div>
+                </table>
 
-
-                            </div>
-
-
-                    
-                  
-               
-
-
-
-
-
+            </div>
 
         </section>
 
 
 
+        <section class="vista" id="vista-nomina" hidden>
 
+            <div class="seccion-header">
+                <div>
+                    <h2>XML a PDF</h2>
+                    <p class="subtitulo">Elige el XML del CFDI o recibo de nómina y se descarga su PDF.</p>
+                </div>
+                <button type="button" class="cel" id="btnCel" aria-expanded="false" aria-controls="panelQr">
+                    Abrir en el celular
+                </button>
+            </div>
+
+            <div class="qr" id="panelQr" hidden>
+                <div class="codigo" id="codigoQr" hidden></div>
+                <div class="texto" id="textoQr"></div>
+            </div>
+
+            <label class="drop" id="zona">
+                <strong>Suelta aquí el XML</strong>
+                <span>o</span>
+                <input type="file" id="archivo" accept=".xml,text/xml,application/xml" multiple>
+                <span class="btn">Elegir archivo</span>
+                <span>Puedes elegir varios a la vez</span>
+            </label>
+
+            <label class="opcion" for="ocultar">
+                <input type="checkbox" id="ocultar">
+                <span>
+                    Ocultar CURP, NSS y cuenta bancaria
+                    <small>Muestra solo los últimos 4 dígitos.</small>
+                </span>
+            </label>
+
+            <div class="cifra"><b id="cuantos">0</b><p>PDF generados</p></div>
+            <ul id="lista" aria-live="polite"></ul>
+
+            <p class="nota">Todo se procesa en tu navegador. El PDF es una versión legible; el documento con validez fiscal es el XML.</p>
+        </section>
 
 
 
