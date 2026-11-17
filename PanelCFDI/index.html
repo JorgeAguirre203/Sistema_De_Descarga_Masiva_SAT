@@ -371,34 +371,30 @@
                     <h2>XML a PDF</h2>
                     <p class="subtitulo">Elige el XML del CFDI o recibo de nómina y se descarga su PDF.</p>
                 </div>
-                <button type="button" class="cel" id="btnCel" aria-expanded="false" aria-controls="panelQr">
-                    Abrir en el celular
-                </button>
+              
+          
             </div>
 
-            <div class="qr" id="panelQr" hidden>
-                <div class="codigo" id="codigoQr" hidden></div>
-                <div class="texto" id="textoQr"></div>
-            </div>
+           
 
-            <label class="drop" id="zona">
+            <label class="np-drop" id="npZona">
                 <strong>Suelta aquí el XML</strong>
                 <span>o</span>
-                <input type="file" id="archivo" accept=".xml,text/xml,application/xml" multiple>
-                <span class="btn">Elegir archivo</span>
+                <input type="file" id="npArchivo" accept=".xml,text/xml,application/xml" multiple hidden>
+                <span class="btn btn-secundario">Elegir archivo</span>
                 <span>Puedes elegir varios a la vez</span>
             </label>
 
-            <label class="opcion" for="ocultar">
-                <input type="checkbox" id="ocultar">
+            <label class="np-opcion" for="npOcultar">
+                <input type="checkbox" id="npOcultar">
                 <span>
                     Ocultar CURP, NSS y cuenta bancaria
                     <small>Muestra solo los últimos 4 dígitos.</small>
                 </span>
             </label>
 
-            <div class="cifra"><b id="cuantos">0</b><p>PDF generados</p></div>
-            <ul id="lista" aria-live="polite"></ul>
+            <div class="np-cifra"><b id="npCuantos">0</b><p>PDF generados</p></div>
+            <ul id="npLista" aria-live="polite"></ul>
 
             <p class="nota">Todo se procesa en tu navegador. El PDF es una versión legible; el documento con validez fiscal es el XML.</p>
         </section>
@@ -406,8 +402,10 @@
 
 
 
-
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+       
+        <script type="module" src="Javascript/main.js"></script>
 
     </main>
 

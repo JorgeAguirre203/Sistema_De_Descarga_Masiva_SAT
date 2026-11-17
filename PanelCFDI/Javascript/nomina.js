@@ -332,31 +332,6 @@ async function procesar(archivos) {
 }
 
 
-/* ---------- Abrir en el celular ---------- */
-document.getElementById('npBtnCel').addEventListener('click', () => {
-    const panel = document.getElementById('npPanelQr'), btn = document.getElementById('npBtnCel');
-    panel.hidden = !panel.hidden;
-    btn.setAttribute('aria-expanded', String(!panel.hidden));
-    if (panel.hidden) return;
-
-    const caja = document.getElementById('npCodigoQr'), texto = document.getElementById('npTextoQr');
-    const url = location.href.split('#')[0];
-    const enLinea = location.protocol === 'http:' || location.protocol === 'https:';
-    const soloEstaPc = /^(localhost|127\.|\[::1\])/.test(location.hostname);
-
-    if (!enLinea || soloEstaPc) {
-        caja.hidden = true;
-        texto.innerHTML = '<strong>Primero publica la página</strong><p>Ahora la estás abriendo desde un archivo o desde <code>localhost</code>, y el celular no puede entrar a esa dirección.</p><p>Ábrela con una dirección que el celular alcance (por ejemplo, la IP de tu PC en tu red Wi-Fi) y aquí aparecerá el código QR.</p>';
-        return;
-    }
-    if (window.qrcode) {
-        const qr = window.qrcode(0, 'M'); qr.addData(url); qr.make();
-        caja.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
-        caja.hidden = false;
-    }
-    texto.innerHTML = '<strong>Escanéalo con la cámara del iPhone</strong><p>Se abre esta misma página en el teléfono. Elige el XML desde Archivos y el PDF se guarda ahí.</p><p>Dirección: <code></code></p>';
-    texto.querySelector('code').textContent = url;
-});
 
 
 /* En iPhone el filtro por tipo a veces deja los XML en gris en la app Archivos */

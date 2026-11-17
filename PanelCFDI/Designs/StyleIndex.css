@@ -1353,3 +1353,117 @@ tbody tr {
         animation: none !important;
     }
 }
+
+
+/* ===== VISTA XML A PDF ===== */
+.np-drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 36px 20px;
+    margin: 18px 0;
+    background: var(--superficie);
+    color: var(--suave);
+    border: 2px dashed var(--linea-fuerte);
+    border-radius: var(--radio);
+    cursor: pointer;
+    text-align: center;
+    transition: .15s;
+}
+
+    .np-drop strong {
+        color: var(--tinta);
+        font-size: 1.05rem;
+    }
+
+    .np-drop:hover, .np-drop.over {
+        border-color: var(--acento);
+        background: var(--acento-claro);
+    }
+
+.np-opcion {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: var(--tinta);
+    cursor: pointer;
+    margin-bottom: 18px;
+}
+
+    .np-opcion small {
+        display: block;
+        color: var(--suave);
+    }
+
+.np-cifra {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    background: var(--superficie);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra-sm);
+}
+
+    .np-cifra b {
+        font-size: 1.8rem;
+        color: var(--acento-texto);
+    }
+
+    .np-cifra p {
+        margin: 0;
+        color: var(--suave);
+    }
+
+#npLista {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+    #npLista li {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 14px;
+        margin-bottom: 6px;
+        background: var(--superficie);
+        border: 1px solid var(--linea);
+        border-radius: var(--radio-sm);
+    }
+
+.np-monto {
+    color: var(--acento-texto);
+    font-weight: 600;
+}
+
+.np-err {
+    color: var(--rojo);
+}
+
+.np-qr {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 16px;
+    margin-bottom: 18px;
+    background: var(--superficie);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+}
+
+    .np-qr[hidden], .np-codigo[hidden] {
+        display: none;
+    }
+
+.np-codigo {
+    width: 140px;
+    flex: none;
+}
+
+.np-texto {
+    color: var(--tinta);
+}
