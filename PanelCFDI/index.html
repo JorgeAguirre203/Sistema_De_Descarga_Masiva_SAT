@@ -70,23 +70,25 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
                 <span class="nav-texto">Solicitudes al SAT</span><span class="nav-badge" id="nav-sol"></span>
             </button>
-             <button type="button" class="nav-item" data-vista="consulta" title="Consulta única">
-     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
-     <span class="nav-texto">Consulta única</span>
- </button>
-            <button type="button" class="nav-item" data-vista="config" title="Configuración">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1" /></svg>
-                <span class="nav-texto">Configuración</span>
-            </button>
-           
-            <button type="button" class="nav-item" id="btnExportarPdf" title="Exportar PDF" data-vista="nomina">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M6 3h8l5 5v13H6z" />
-                    <path d="M14 3v5h5" />
-                    <path d="M12.5 11v6" />
-                    <path d="M10 14.5l2.5 2.5 2.5-2.5" />
-                </svg>
-                <span class="nav-texto">Exportar PDF</span>
+                <button type="button" class="nav-item" data-vista="config" title="Configuración">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1" /></svg>
+                    <span class="nav-texto">Configuración</span>
+                </button>
+
+                <button type="button" class="nav-item" id="btnExportarPdf" title="Exportar PDF" data-vista="nomina">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M6 3h8l5 5v13H6z" />
+                        <path d="M14 3v5h5" />
+                        <path d="M12.5 11v6" />
+                        <path d="M10 14.5l2.5 2.5 2.5-2.5" />
+                    </svg>
+                    <span class="nav-texto">Exportar PDF</span>
+                </button>
+
+         
+            <button type="button" class="nav-item" data-vista="consulta" title="Consulta única">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
+                <span class="nav-texto">Consulta única</span>
             </button>
 
 
@@ -108,6 +110,7 @@
         <!-- RESUMEN -->
 
         <section class="vista" id="vista-resumen">
+
 
             <div class="seccion-header">
                 <div>
@@ -138,10 +141,168 @@
 
 
             </div>
-            <p class="nota">Buscando CFDI desde <strong id="desde">—</strong></p>
+            <!--<p class="nota">Buscando CFDI desde <strong id="desde">—</strong></p>-->
+           
 
-            <!--añadir un modo oscuro o alternativas de colores mas claros -->
+            <section class="cf" id="comoFunciona" aria-label="Cómo funciona la descarga de CFDI">
 
+                <div class="cf-cabeza">
+                    <div>
+                        <h3>Cómo funciona</h3>
+                        <p class="subtitulo">Así llegan tus CFDI del SAT al panel, sin que hagas nada.</p>
+                    </div>
+                    <div class="cf-acciones">
+                        <button type="button" class="btn btn-secundario" id="cfPausa" aria-pressed="false">Pausar</button>
+                        <button type="button" class="btn btn-secundario" id="cfRepetir">Repetir</button>
+                    </div>
+                </div>
+
+                <div class="cf-cuerpo">
+
+                    <!-- PASOS -->
+                    <div class="cf-pasos" role="tablist" aria-label="Pasos de la descarga">
+
+                        <button type="button" class="cf-paso" role="tab" aria-selected="false" data-paso="0">
+                            <span class="cf-num">1</span>
+                            <span class="cf-txt"><b>Pide los CFDI al SAT</b><small>El servicio firma la solicitud con tu FIEL y la envía.</small></span>
+                            <span class="cf-barra" aria-hidden="true"><i></i></span>
+                        </button>
+
+                        <button type="button" class="cf-paso" role="tab" aria-selected="false" data-paso="1">
+                            <span class="cf-num">2</span>
+                            <span class="cf-txt"><b>Revisa el estado</b><small>Pregunta cada cierto tiempo hasta que el SAT termina.</small></span>
+                            <span class="cf-barra" aria-hidden="true"><i></i></span>
+                        </button>
+
+                        <button type="button" class="cf-paso" role="tab" aria-selected="false" data-paso="2">
+                            <span class="cf-num">3</span>
+                            <span class="cf-txt"><b>Descarga el paquete</b><small>Baja el archivo comprimido y extrae cada XML.</small></span>
+                            <span class="cf-barra" aria-hidden="true"><i></i></span>
+                        </button>
+
+                        <button type="button" class="cf-paso" role="tab" aria-selected="false" data-paso="3">
+                            <span class="cf-num">4</span>
+                            <span class="cf-txt"><b>Los ves en el panel</b><small>Filtra, busca y convierte cualquier XML a PDF.</small></span>
+                            <span class="cf-barra" aria-hidden="true"><i></i></span>
+                        </button>
+
+                    </div>
+
+                    <!-- ESCENARIO -->
+                    <div class="cf-escenario">
+                        <div class="cf-ventana">
+
+                            <div class="cf-ventana-barra" aria-hidden="true">
+                                <span></span><span></span><span></span>
+                                <em id="cfTituloVentana">Solicitud al SAT</em>
+                            </div>
+
+                            <div class="cf-escenas">
+
+                                <!-- 1 · SOLICITUD -->
+                                <div class="cf-escena" data-escena="0">
+                                    <div class="cf-form">
+                                        <div class="cf-campo" data-t style="--d:.10s"><small>RFC</small><b class="cf-mono">XAXX010101000</b></div>
+                                        <div class="cf-campo" data-t style="--d:.40s"><small>Buscar desde</small><b class="cf-mono">2026-05-01 00:00</b></div>
+                                        <div class="cf-campo" data-t style="--d:.70s"><small>Tipo</small><b>Recibidos</b></div>
+                                    </div>
+                                    <div class="cf-fila-accion" data-t style="--d:1.0s">
+                                        <span class="cf-boton-falso">Solicitar al SAT</span>
+                                    </div>
+                                    <div class="cf-respuesta" data-t style="--d:1.9s">
+                                        <span class="cf-punto-ok" aria-hidden="true"></span>
+                                        <div><b>Solicitud aceptada</b><small class="cf-mono">Código 5000 · IdSolicitud 3f9a…c21e</small></div>
+                                    </div>
+                                </div>
+
+                                <!-- 2 · VERIFICACIÓN -->
+                                <div class="cf-escena" data-escena="1">
+                                    <ul class="cf-lista-estado">
+                                        <li data-t style="--d:.10s; --c:1.6s">
+                                            <span class="cf-mono">3f9a…c21e</span>
+                                            <span class="cf-estado">
+                                                <span class="cf-chip cf-chip-azul cf-en"><i class="cf-giro" aria-hidden="true"></i>En proceso</span>
+                                                <span class="cf-chip cf-chip-verde cf-ok">Terminada</span>
+                                            </span>
+                                        </li>
+                                        <li data-t style="--d:.45s; --c:2.4s">
+                                            <span class="cf-mono">81b7…04d9</span>
+                                            <span class="cf-estado">
+                                                <span class="cf-chip cf-chip-azul cf-en"><i class="cf-giro" aria-hidden="true"></i>En proceso</span>
+                                                <span class="cf-chip cf-chip-verde cf-ok">Terminada</span>
+                                            </span>
+                                        </li>
+                                        <li data-t style="--d:.80s; --c:3.2s">
+                                            <span class="cf-mono">c04e…77a2</span>
+                                            <span class="cf-estado">
+                                                <span class="cf-chip cf-chip-azul cf-en"><i class="cf-giro" aria-hidden="true"></i>En proceso</span>
+                                                <span class="cf-chip cf-chip-verde cf-ok">Terminada</span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <p class="cf-nota-escena" data-t style="--d:3.6s">Cuando el SAT termina, el paquete queda listo para bajarse.</p>
+                                </div>
+
+                                <!-- 3 · DESCARGA -->
+                                <div class="cf-escena" data-escena="2">
+                                    <div class="cf-paquete" data-t style="--d:.10s">
+                                        <span class="cf-icono-archivo" aria-hidden="true">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5M10 12h4M10 16h4" /></svg>
+                                        </span>
+                                        <div class="cf-paquete-info">
+                                            <b class="cf-mono">paquete.zip</b>
+                                            <span class="cf-carga"><i></i></span>
+                                        </div>
+                                    </div>
+
+                                    <ul class="cf-xmls">
+                                        <li data-t style="--d:1.2s"><span class="cf-mono">8E1C…A07B.xml</span></li>
+                                        <li data-t style="--d:1.5s"><span class="cf-mono">5D90…31F4.xml</span></li>
+                                        <li data-t style="--d:1.8s"><span class="cf-mono">B27A…E6C0.xml</span></li>
+                                        <li data-t style="--d:2.1s"><span class="cf-mono">0F43…9D18.xml</span></li>
+                                    </ul>
+
+                                    <div class="cf-contador" data-t style="--d:2.4s">
+                                        <b id="cfContador">0</b>
+                                        <span>CFDI guardados</span>
+                                    </div>
+                                </div>
+
+                                <!-- 4 · COMPROBANTES -->
+                                <div class="cf-escena" data-escena="3">
+                                    <div class="cf-mini-tabla">
+                                        <div class="cf-mini-fila cf-mini-cab" data-t style="--d:.05s">
+                                            <span>Fecha</span><span>Emisor</span><span>Tipo</span><span class="num">Total</span><span></span>
+                                        </div>
+                                        <div class="cf-mini-fila" data-t style="--d:.45s">
+                                            <span class="cf-mono">12/11/2026</span><span>Papelería del Norte</span>
+                                            <span><span class="cf-chip cf-chip-verde">Ingreso</span></span><span class="num cf-mono">$1,250.00</span>
+                                            <span><span class="cf-pdf">PDF</span></span>
+                                        </div>
+                                        <div class="cf-mini-fila" data-t style="--d:.85s">
+                                            <span class="cf-mono">11/11/2026</span><span>Ferretería Los Mochis</span>
+                                            <span><span class="cf-chip cf-chip-azul">Pago</span></span><span class="num cf-mono">$3,480.00</span>
+                                            <span><span class="cf-pdf">PDF</span></span>
+                                        </div>
+                                        <div class="cf-mini-fila" data-t style="--d:1.25s">
+                                            <span class="cf-mono">10/11/2026</span><span>Servicios del Pacífico</span>
+                                            <span><span class="cf-chip cf-chip-ambar">Egreso</span></span><span class="num cf-mono">$640.00</span>
+                                            <span><span class="cf-pdf">PDF</span></span>
+                                        </div>
+                                        <div class="cf-mini-fila" data-t style="--d:1.65s">
+                                            <span class="cf-mono">10/11/2026</span><span>Abarrotes La Esquina</span>
+                                            <span><span class="cf-chip cf-chip-verde">Ingreso</span></span><span class="num cf-mono">$920.50</span>
+                                            <span><span class="cf-pdf">PDF</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
 
         </section>
 
