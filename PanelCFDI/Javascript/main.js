@@ -6,9 +6,7 @@ import { cargar } from './fechas-rfc.js';
 import { pintar, cargarDatos } from './cfdi.js';
 
 
-// =========================================================
-// ARRANQUE
-// =========================================================
+
 
 pintar();
 cargar();
@@ -18,9 +16,8 @@ cargarDatos();
 setInterval(cargarDatos, 30000);
 
 
-// =========================================================
 // ELIMINAR RFC
-// =========================================================
+
 
 const btnEliminar = document.getElementById('DropRFC');
 const inputEliminar = document.getElementById('Eliminarfc');
@@ -63,13 +60,8 @@ btnEliminar.addEventListener('click', async () => {
 });
 
 
-// =========================================================
-// CÓMO FUNCIONA · demo interactiva del Resumen
-// - Arranca cuando la sección entra en pantalla
-// - Avanza sola; se detiene al pasar el mouse, al enfocarla,
-//   al cambiar de pestaña o al pulsar "Pausar"
-// - Click (o flechas del teclado) en un paso para saltar a él
-// =========================================================
+
+
 
 const raiz = document.getElementById('comoFunciona');
 
@@ -91,14 +83,13 @@ if (raiz) {
     let pausadoPorUsuario = false;
     let rafContador = 0;
 
-    // ---------- Pausa / reanudar ----------
 
     function actualizarPausa() {
         const pausa = pausadoPorUsuario || encima || !viendose || document.hidden;
         raiz.classList.toggle('cf-pausa', pausa);
     }
 
-    // ---------- Mostrar un paso ----------
+ 
 
     function mostrar(i) {
 

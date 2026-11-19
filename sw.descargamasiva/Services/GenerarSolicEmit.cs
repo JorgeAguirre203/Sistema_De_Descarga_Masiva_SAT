@@ -45,8 +45,7 @@ namespace sw.descargamasiva.Services
             Console.WriteLine($"Desde: {fechaInicial:yyyy-MM-dd HH:mm:ss}");
             Console.WriteLine($"Hasta: {fechaFinal:yyyy-MM-dd HH:mm:ss}");
 
-            // SolicitudEmitidos arma el nodo SolicitaDescargaEmitidos
-            // (la clase Solicitud está fija a SolicitaDescargaRecibidos).
+        
             SolicitudEmitidos solicitud =
                 new SolicitudEmitidos(urlSolicitud, urlSolicitudEmitidosAction);
 

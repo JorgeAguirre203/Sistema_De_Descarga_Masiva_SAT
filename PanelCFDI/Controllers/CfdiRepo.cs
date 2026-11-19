@@ -22,9 +22,6 @@ public static class CfdiRepo
     static readonly string cn =
         ConfigurationManager.ConnectionStrings["DescargaMasiva"].ConnectionString;
 
-    // ---------- Comprobantes ----------
-    // Los datos (fecha, emisor, tipo, total) se extraen con XQuery de la columna
-    // XML Archivoxml. El TOP se aplica por fecha_guardado (los más recientes).
     public static List<CfdiFila> ListarCfdi(int max)
     {
         const string sql = @"

@@ -67,7 +67,7 @@ function pintarFechas(filas) {
 
     $('vacio-fechas').style.display = rfcs.length ? 'none' : 'block';
 
-    // En Resumen se muestra la fecha más antigua de los recibidos
+   
     const rec = filas.filter(f => f.tipo === 'RECIBIDO' && f.fecha).map(f => f.fecha).sort();
     $('desde').textContent = rec.length
         ? rec[0] + (rec.length > 1 ? ' (la más antigua de ' + rec.length + ' RFC)' : '')

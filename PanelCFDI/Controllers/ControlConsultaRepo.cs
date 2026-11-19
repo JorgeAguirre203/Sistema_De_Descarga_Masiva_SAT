@@ -122,8 +122,7 @@ public static class ControlConsultaRepo
     }
 
 
-    // ---------- RFC por tipo (ControlRFCSAT) ----------
-
+ 
     public static void FijarRfc(string tipo, string rfc)
     {
         using (var conn = new SqlConnection(cn))

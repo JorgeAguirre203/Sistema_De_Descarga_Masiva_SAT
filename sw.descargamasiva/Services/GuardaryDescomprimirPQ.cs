@@ -44,8 +44,7 @@ namespace sw.descargamasiva.Services
 
                     "GZIP");
 
-            // Carpeta temporal exclusiva de ESTE paquete (mismo disco que el destino
-            // final, así mover archivos es instantáneo).
+            // Carpeta temporal exclusiva de ESTE paquete 
             string carpetaTemp =
                 Path.Combine(
                     carpetaTipo,
@@ -165,10 +164,7 @@ namespace sw.descargamasiva.Services
             public string Mes = "SIN_FECHA";
         }
 
-        // Lee Fecha, Emisor/@Rfc y Receptor/@Rfc del XML.
-        // (cambia el namespace, pero los nombres son los mismos).
-        // Si algo falta o el XML no se puede leer, esos campos quedan en SIN
-        // para que el archivo no se pierda.
+       
         private static DatosCfdi LeerDatosCfdi(string rutaXml)
         {
             DatosCfdi datos = new DatosCfdi();

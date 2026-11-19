@@ -14,11 +14,7 @@ namespace sw.descargamasiva.Services
 {
     internal class Generadorpfx
     {
-        // =========================================================
-        // CONFIGURACION (solo lo que sigue viniendo de App.config)
-        // La FIEL (rutas y contraseña) ya NO se lee de App.config:
-        // sale de la tabla dbo.ControlRFCSAT.
-        // =========================================================
+ 
 
         private static string Cfg(string k)
         {
@@ -31,14 +27,14 @@ namespace sw.descargamasiva.Services
                 "Resources");
 
         // Cabecera fija de cualquier blob protegido con DPAPI
-        // (GUID del proveedor: D08C9DDF-0115-D111-8C7A-00C04FC297EB).
+   
         private static readonly byte[] CabeceraDpapi =
             { 0x01, 0x00, 0x00, 0x00, 0xD0, 0x8C, 0x9D, 0xDF };
 
 
-        // =========================================================
+     
         // DATOS FIEL OBTENIDOS DESDE CONTROLRFCSAT
-        // =========================================================
+    
 
         private sealed class DatosFiel
         {
@@ -52,13 +48,9 @@ namespace sw.descargamasiva.Services
         }
 
 
-        // =========================================================
+      
         // OBTENER CONFIGURACION FIEL DE UN RFC
-        //
-        // Un RFC puede tener varias filas activas (EMISOR, RECIBIDO,
-        // SOLICITANTE) que comparten la misma FIEL. DISTINCT las junta
-        // en una sola; solo falla si las filas apuntan a FIEL distintas.
-        // =========================================================
+      
 
         private static DatosFiel ObtenerDatosFiel(string rfc)
         {
@@ -144,9 +136,9 @@ namespace sw.descargamasiva.Services
         }
 
 
-        // =========================================================
+    
         // RESOLVER LAS RUTAS DE LOS ARCHIVOS FIEL
-        // =========================================================
+    
 
         private static string ResolverRuta(
             string carpeta,
@@ -192,19 +184,6 @@ namespace sw.descargamasiva.Services
                 Path.Combine(carpetaCompleta, rutaArchivo));
         }
 
-
-        // =========================================================
-        // OBTENER LA CONTRASEÑA DE LA FIEL
-        //
-        // Acepta dos formatos en ClavePrivadaProtegida:
-        //   1) Texto plano (como la tienes hoy).
-        //   2) Base64 de ProtectedData.Protect con LocalMachine (DPAPI).
-        //
-        // Se distingue por la cabecera de DPAPI, así una contraseña
-        // en texto plano que casualmente parezca Base64 no se confunde,
-        // y un blob DPAPI real que no se pueda descifrar falla con un
-        // mensaje claro en vez de usarse como contraseña.
-        // =========================================================
 
         private static bool PareceDatoDpapi(byte[] datos)
         {
@@ -296,9 +275,7 @@ namespace sw.descargamasiva.Services
         }
 
         // GENERAR PFX CON LOS DATOS RECIBIDOS
-        //
-        // La salida se genera en la carpeta que recibe el método.
-        // Los PEM se eliminan después de ejecutar OpenSSL.
+       
 
         private static void CrearPfx(
             string rutaCer,
@@ -363,7 +340,7 @@ namespace sw.descargamasiva.Services
                     File.Delete(rutaPfx);
                 }
 
-                // PASO 1: Convertir la clave .key a PEM.
+                // Convertir la clave .key a PEM.
    
 
                 Console.WriteLine(
@@ -381,9 +358,9 @@ namespace sw.descargamasiva.Services
                     argumentosLlave,
                     clave);
 
-                // -------------------------------------------------
-                // PASO 2: Convertir el certificado .cer a PEM.
-                // -------------------------------------------------
+           
+                //Convertir el certificado .cer a PEM.
+               
 
                 Console.WriteLine(
                     "Convirtiendo el certificado a PEM...");
@@ -399,9 +376,9 @@ namespace sw.descargamasiva.Services
                     argumentosCertificado,
                     null);
 
-                // -------------------------------------------------
-                // PASO 3: Empaquetar los archivos en formato PFX.
-                // -------------------------------------------------
+              
+                //  Empaquetar los archivos en formato PFX.
+              
 
                 Console.WriteLine(
                     "Generando el archivo PFX...");
@@ -446,8 +423,7 @@ namespace sw.descargamasiva.Services
 
         // EJECUTAR OPENSSL
         // La contraseña se entrega por una variable de entorno
-        // del proceso, no como argumento visible en la línea
-        // de comandos.
+        
 
         private static void EjecutarComandoOpenSsl(
             string carpetaOpenSsl,
@@ -540,12 +516,7 @@ namespace sw.descargamasiva.Services
         }
 
 
-        // CARGAR FIEL POR RFC
-        //
-        // Lee la FIEL de ControlRFCSAT, genera un PFX temporal
-        // (carpeta con GUID, así varios workers no se pisan) y
-        // devuelve el certificado. Quien lo reciba debe hacer
-        // Dispose() cuando termine de usarlo.
+       
 
 
         public static X509Certificate2 Cargar(string rfc)
