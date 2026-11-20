@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace sw.descargamasiva.InsertarBD
 {
@@ -152,6 +153,50 @@ namespace sw.descargamasiva.InsertarBD
         }
 
 
+        public static int ObtenerTiempo(string tipo)
+        {
+            string columna;
+
+            switch (tipo)
+            {
+                case "TiempoRecibidos":
+                    columna = "tiempoRecibidos";
+                    break;
+
+                case "TiempoEmitidos":
+                    columna = "tiempoEmitidos";
+                    break;
+
+                case "TiempoPendientes":
+                    columna = "tiempoPendientes";
+                    break;
+
+                case "TiempoVigencia":
+                    columna = "tiempoVigencia";
+                    break;
+
+                default:
+                    throw new ArgumentException("Tipo de configuración no válido.");
+            }
+
+            string query = "SELECT " + columna + " FROM dbo.appconfig;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+
+                object resultado = cmd.ExecuteScalar();
+
+                if (resultado == null)
+                    throw new Exception("No existe configuración en appconfig.");
+
+                if (resultado == DBNull.Value)
+                    return 1;
+
+                return Convert.ToInt32(resultado);
+            }
+        }
 
 
         public static void ActualizarUltimaConsultaPorRfc(string rfc, string tipo, DateTime nuevaFecha)

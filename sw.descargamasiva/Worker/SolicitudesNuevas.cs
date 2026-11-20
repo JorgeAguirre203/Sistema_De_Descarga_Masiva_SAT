@@ -16,11 +16,16 @@ namespace sw.descargamasiva.Worker
         public class segundoprocesoworker : BackgroundService
         {
             // Cada cuánto se piden CFDI nuevos para todos los RFC.
-            private static readonly TimeSpan Intervalo = TimeSpan.FromHours(12);
-           
+
+         
+    
+
+
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
             {
+
+
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 ServicePointManager.Expect100Continue = false;
 
@@ -121,7 +126,8 @@ namespace sw.descargamasiva.Worker
                             }
                         }
                     }
-
+                    int horas = Guardarenbased.ObtenerTiempo("TiempoRecibidos");
+                   TimeSpan Intervalo = TimeSpan.FromHours(horas);
                     await Task.Delay(Intervalo, stoppingToken);
                 }
             }

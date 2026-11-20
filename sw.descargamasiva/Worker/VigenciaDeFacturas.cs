@@ -48,9 +48,10 @@ public class VigenciaFacturasWorker : BackgroundService
             // Esperar 24 horas antes de la siguiente ejecución
             try
             {
-                await Task.Delay(
-                    TimeSpan.FromHours(24),
-                    stoppingToken);
+
+                int horas = Guardarenbased.ObtenerTiempo("TiempoVigencia");
+                TimeSpan Intervalo = TimeSpan.FromHours(horas);
+                await Task.Delay(Intervalo, stoppingToken);
             }
             catch (OperationCanceledException)
                 when (stoppingToken.IsCancellationRequested)

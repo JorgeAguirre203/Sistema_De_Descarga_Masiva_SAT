@@ -15,7 +15,7 @@ namespace sw.descargamasiva.Worker
         public class PrimerProcesoWorker : BackgroundService
         {
             // Cada cuánto se revisan las solicitudes pendientes de todos los RFC.
-            private static readonly TimeSpan Intervalo = TimeSpan.FromHours(12);
+           
             private static readonly TimeSpan RetrasoInicial = TimeSpan.FromSeconds(40);
             protected override async Task ExecuteAsync(
                 CancellationToken stoppingToken)
@@ -79,7 +79,12 @@ namespace sw.descargamasiva.Worker
 
                     try
                     {
+
+
+                        int horas = Guardarenbased.ObtenerTiempo("TiempoPendientes");
+                        TimeSpan Intervalo = TimeSpan.FromHours(horas);
                         await Task.Delay(Intervalo, stoppingToken);
+                       
                     }
                     catch (OperationCanceledException)
                         when (stoppingToken.IsCancellationRequested)

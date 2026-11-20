@@ -63,6 +63,52 @@ public static class ControlConsultaRepo
         }
     }
 
+
+
+
+
+
+
+    //================================= NUEVO CODIGO AQUIIIIIIIIIII ================================
+    public static int FijartiempoWorker(string tipo, int tiempo)
+    {
+        string columna;
+
+        switch (tipo)
+        {
+            case "Recibidos": columna = "tiempoRecibidos"; break;
+            case "Emitidos": columna = "tiempoEmitidos"; break;
+            case "Pendientes": columna = "tiempoPendientes"; break;
+            case "Vigencia": columna = "tiempoVigencia"; break;
+            default:
+                throw new ArgumentException("Tipo no válido.");
+        }
+
+        // La columna sale de una lista cerrada (switch), por eso es seguro concatenarla
+        string query = "UPDATE dbo.appconfig SET " + columna + " = @tiempo WHERE id = 1;";
+
+        using (var conn = new SqlConnection(cn))
+        using (var cmd = new SqlCommand(query, conn))
+        {
+            cmd.Parameters.Add("@tiempo", SqlDbType.Int).Value = tiempo;
+            conn.Open();
+
+            int filas = cmd.ExecuteNonQuery();
+
+            if (filas == 0)
+                throw new Exception("No existe configuración en appconfig (id = 1).");
+
+            return filas;
+        }
+    }
+
+
+
+
+
+
+
+
     // Cambia la fecha de TODOS los tipos del RFC (RECIBIDO, EMITIDO, SOLICITANTE).
     // Si el RFC no tiene filas, las crea. Devuelve cuántas filas quedaron con la fecha.
     public static int FijarPorRfc(string rfc, DateTime fecha)

@@ -85,7 +85,7 @@
                 </button>
 
          
-            <button type="button" class="nav-item" data-vista="consulta" title="Consulta única">
+            <button type="button" class="nav-item" data-vista="consulta" title="Configuracion Worker">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
                 <span class="nav-texto">Consulta única</span>
             </button>
@@ -141,7 +141,7 @@
 
             </div>
             <!--<p class="nota">Buscando CFDI desde <strong id="desde">—</strong></p>-->
-           
+
 
             <section class="cf" id="comoFunciona" aria-label="Cómo funciona la descarga de CFDI">
 
@@ -395,7 +395,7 @@
 
         </section>
 
-        <!-- CONFIGURACIÓN -->
+      
 
         <section class="config vista" id="vista-config" hidden>
 
@@ -406,52 +406,95 @@
                 </div>
             </div>
 
+            <!-- PESTAÑAS -->
+            <div class="tabs" role="tablist" aria-label="Secciones de configuración">
+                <button class="tab activa" role="tab" id="tab-fechas"
+                        aria-selected="true" aria-controls="panel-fechas" data-panel="panel-fechas">
+                    Fecha de búsqueda
+                </button>
+                <button class="tab" role="tab" id="tab-intervalos"
+                        aria-selected="false" aria-controls="panel-intervalos" data-panel="panel-intervalos" tabindex="-1">
+                    Intervalos
+                </button>
+            </div>
 
-            <div class="config-caja">
-                <div class="config-cuerpo">
+            <div class="tab-panel" id="panel-fechas" role="tabpanel" aria-labelledby="tab-fechas">
+                <div class="config-caja">
+                    <div class="config-caja">
+                        <div class="config-cuerpo">
 
-                    <!-- FECHA DE BÚSQUEDA POR RFC -->
-                    <div class="config-bloque fechas">
+                            <!-- FECHA DE BÚSQUEDA POR RFC -->
+                            <div class="config-bloque fechas">
 
-                        <h3>Fecha de búsqueda por RFC</h3>
-                        <p class="ayuda">Desde qué fecha pide el proceso los CFDI al SAT. La fecha se aplica a todos los tipos del RFC: recibidos, emitidos y solicitante.</p>
+                                <h3>Fecha de búsqueda por RFC</h3>
+                                <p class="ayuda">Desde qué fecha pide el proceso los CFDI al SAT. La fecha se aplica a todos los tipos del RFC: recibidos, emitidos y solicitante.</p>
 
-                        <div class="fechas-tabla" id="tablaFechas"></div>
+                                <div class="fechas-tabla" id="tablaFechas"></div>
 
-                        <div class="vacio" id="vacio-fechas">Aún no hay RFC con fecha de búsqueda. Agrega uno abajo.</div>
+                                <div class="vacio" id="vacio-fechas">Aún no hay RFC con fecha de búsqueda. Agrega uno abajo.</div>
 
-                        <div class="fecha-nueva">
+                                <div class="fecha-nueva">
 
 
-                            <div class="fila-accion">
-                                <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="AGREGAR RFC" aria-label="RFC" autocomplete="off">
-                                <input type="datetime-local" id="nuevaFecha" aria-label="Buscar desde">
-                                <button type="button" id="btnAgregarFecha" class="btn btn-secundario">Agregar</button>
+                                    <div class="fila-accion">
+                                        <input type="text" id="nuevoRfcFecha" class="rfc-input" maxlength="13" placeholder="AGREGAR RFC" aria-label="RFC" autocomplete="off">
+                                        <input type="datetime-local" id="nuevaFecha" aria-label="Buscar desde">
+                                        <button type="button" id="btnAgregarFecha" class="btn btn-secundario">Agregar</button>
+                                    </div>
+
+                                    <div class="fila-accion">
+                                        <input type="text" id="Eliminarfc" class="rfceliminar" maxlength="13" placeholder="RFC A ELIMINAR" aria-label="RFC" autocomplete="off">
+                                        <button type="button" id="DropRFC" class="btn btn-intervalos">Eliminar RFC</button>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div id="msg" class="mensaje" aria-live="polite"></div>
+
                             </div>
-
-                            <div class="fila-accion">
-                                <input type="text" id="Eliminarfc" class="rfceliminar" maxlength="13" placeholder="RFC A ELIMINAR" aria-label="RFC" autocomplete="off">
-                                <button type="button" id="DropRFC" class="btn btn-intervalos">Eliminar RFC</button>
-                            </div>
-
-
 
                         </div>
-
-                        <div id="msg" class="mensaje" aria-live="polite"></div>
-
                     </div>
 
                 </div>
             </div>
 
+          
+            <div class="tab-panel" id="panel-intervalos" role="tabpanel" aria-labelledby="tab-intervalos" hidden>
+                <div class="tabla">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">Recibidos</th>
+                                <th colspan="2">Emitidos</th>
+                                <th colspan="2">Pendientes</th>
+                                <th colspan="2">Vigentes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoRecibidos" placeholder="Minutos" aria-label="Minutos para Recibidos"></td>
+                                <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Recibidos" data-input="tiempoRecibidos">Aplicar</button></td>
 
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoEmitidos" placeholder="Minutos" aria-label="Minutos para Emitidos"></td>
+                                <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Emitidos" data-input="tiempoEmitidos">Aplicar</button></td>
 
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoPendientes" placeholder="Minutos" aria-label="Minutos para Pendientes"></td>
+                                <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Pendientes" data-input="tiempoPendientes">Aplicar</button></td>
 
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoVigencia" placeholder="Minutos" aria-label="Minutos para Vigentes"></td>
+                                <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Vigencia" data-input="tiempoVigencia">Aplicar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-        </section>
+                <div id="msgTiempos" class="mensaje" aria-live="polite" style="margin-top:16px"></div>
+            </div>
 
-
+            </section>
 
 
 
@@ -531,11 +574,11 @@
                     <h2>XML a PDF</h2>
                     <p class="subtitulo">Elige el XML del CFDI o recibo de nómina y se descarga su PDF.</p>
                 </div>
-              
-          
+
+
             </div>
 
-           
+
 
             <label class="np-drop" id="npZona">
                 <strong>Suelta aquí el XML</strong>
@@ -564,7 +607,7 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-       
+
         <script type="module" src="Javascript/main.js"></script>
 
     </main>

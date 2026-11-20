@@ -2109,3 +2109,48 @@ tbody tr {
         display: none;
     }
 }
+
+
+
+.config-caja + .tabla {
+    margin-top: 32px;
+}
+
+
+
+/* ===== PESTAÑAS DE CONFIGURACIÓN ===== */
+.tabs {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    margin-bottom: 20px;
+    background: var(--azul-claro);
+    border-radius: 12px;
+}
+
+.tab {
+    height: 38px;
+    padding: 0 18px;
+    color: var(--azul-texto);
+    background: transparent;
+    border: 0;
+    border-radius: 9px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+    .tab:hover {
+        background: var(--azul-medio);
+    }
+
+    .tab.activa {
+        color: var(--sobre-acento);
+        background: var(--acento);
+        box-shadow: var(--sombra-sm);
+    }
+
+.tab-panel[hidden] {
+    display: none;
+}

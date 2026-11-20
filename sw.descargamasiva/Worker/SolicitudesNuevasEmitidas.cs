@@ -16,7 +16,7 @@ namespace sw.descargamasiva.Worker
         public class tercerprocesoworker : BackgroundService
         {
             // Cada cuánto se piden CFDI nuevos para todos los RFC.
-            private static readonly TimeSpan Intervalo = TimeSpan.FromHours(12);
+          
             private static readonly TimeSpan RetrasoInicial = TimeSpan.FromSeconds(20);
             protected override async Task ExecuteAsync(     
                 CancellationToken stoppingToken)
@@ -116,6 +116,8 @@ namespace sw.descargamasiva.Worker
                         }
                     }
 
+                    int horas = Guardarenbased.ObtenerTiempo("TiempoEmitidos");
+                    TimeSpan Intervalo = TimeSpan.FromHours(horas);
                     await Task.Delay(Intervalo, stoppingToken);
                 }
             }
