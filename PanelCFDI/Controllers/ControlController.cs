@@ -197,6 +197,25 @@ public class ControlController : Controller
         }
     }
 
+    // POST /Control/FijarTiempoWorker  (tipo, tiempo en minutos) -> appconfig
+    [HttpPost]
+    public JsonResult FijarTiempoWorker(string tipo, int tiempo)
+    {
+        try
+        {
+            if (tiempo < 1 || tiempo > 1440)
+                return Json(new { ok = false, error = "El tiempo debe estar entre 1 y 1440 minutos." });
+
+            ControlConsultaRepo.FijartiempoWorker(tipo, tiempo);
+
+            return Json(new { ok = true, tipo = tipo, tiempo = tiempo });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { ok = false, error = ex.Message });
+        }
+    }
+
     [HttpPost]
     public JsonResult EliminarRfc(string rfc)
     {

@@ -85,7 +85,7 @@ public static class ControlConsultaRepo
         }
 
         // La columna sale de una lista cerrada (switch), por eso es seguro concatenarla
-        string query = "UPDATE dbo.appconfig SET " + columna + " = @tiempo WHERE id = 1;";
+        string query = "UPDATE dbo.appconfig SET " + columna + " = @tiempo";
 
         using (var conn = new SqlConnection(cn))
         using (var cmd = new SqlCommand(query, conn))
@@ -272,7 +272,7 @@ public static class ControlConsultaRepo
             cmd.Parameters.Add("@rfc", SqlDbType.VarChar, 13).Value = rfc.Trim().ToUpperInvariant();
             conn.Open();
             return cmd.ExecuteNonQuery();   // total de filas borradas
-        }
+        }     
     }
 
 
