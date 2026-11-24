@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 // Responde a /Control/EstadoRfc, /Control/FijarFechaRfc y /Control/FijarRfc
@@ -107,6 +109,91 @@ public class ControlController : Controller
         catch (Exception ex)
         {
             return Json(new { ok = false, error = ex.Message });
+        }
+    }
+
+    // GET /Control/EstadoFiel -> qué RFC ya tienen FIEL configurada
+    [HttpGet]
+    public JsonResult EstadoFiel()
+    {
+        try
+        {
+            string carpetaBase = FielService.CarpetaBase();
+            var filas = ControlConsultaRepo.ListarFiel();
+
+            foreach (var f in filas)
+            {
+                string dir = string.IsNullOrWhiteSpace(f.Carpeta) ? carpetaBase : f.Carpeta;
+                f.ArchivosOk =
+                    !string.IsNullOrWhiteSpace(f.Cer) && !string.IsNullOrWhiteSpace(f.Key) &&
+                    System.IO.File.Exists(System.IO.Path.Combine(dir, f.Cer)) &&
+                    System.IO.File.Exists(System.IO.Path.Combine(dir, f.Key));
+            }
+
+            // Minúsculas: es lo que espera fiel.js (el serializador respetaría Rfc, Cer...)
+            var salida = filas.Select(f => new
+            {
+                rfc = f.Rfc,
+                cer = f.Cer,
+                key = f.Key,
+                carpeta = f.Carpeta,
+                tieneClave = f.TieneClave,
+                archivosOk = f.ArchivosOk
+            }).ToList();
+
+            return Json(new { ok = true, carpeta = carpetaBase, filas = salida },
+                        JsonRequestBehavior.AllowGet);
+        }
+        catch (Exception ex)
+        {
+            return Json(new { ok = false, error = ex.Message }, JsonRequestBehavior.AllowGet);
+        }
+    }
+
+    // POST /Control/SubirFiel  (rfc, clave, cer, key)
+    // Guarda .cer y .key en la carpeta FIEL (la crea si no existe) y actualiza ControlRFCSAT.
+    [HttpPost]
+    public JsonResult SubirFiel(string rfc, string clave, HttpPostedFileBase cer, HttpPostedFileBase key)
+    {
+        try
+        {
+            rfc = (rfc ?? "").Trim().ToUpperInvariant();
+
+            if (!FielService.RfcValido(rfc))
+                return Json(new { ok = false, error = "RFC no válido." });
+
+            if (string.IsNullOrWhiteSpace(clave))
+                return Json(new { ok = false, error = "Escribe la contraseña de la clave privada." });
+
+            if (!ControlConsultaRepo.ExisteRfcSat(rfc))
+                return Json(new { ok = false, error = "Ese RFC no está dado de alta. Agrégalo primero en \"Fecha de búsqueda\"." });
+
+            // 1) archivos en disco (verifica / crea la carpeta)
+            ResultadoFiel r = FielService.Guardar(rfc, cer, key);
+
+            // 2) base de datos (todas las filas del RFC: RECIBIDO, EMISOR, SOLICITANTE)
+            int filas = ControlConsultaRepo.GuardarFiel(
+                rfc, r.Carpeta, r.ArchivoCer, r.ArchivoKey, FielService.ProtegerClave(clave));
+
+            return Json(new
+            {
+                ok = true,
+                carpeta = r.Carpeta,
+                carpetaCreada = r.CarpetaCreada,
+                cer = r.ArchivoCer,
+                key = r.ArchivoKey,
+                vence = r.Vence.ToString("yyyy-MM-dd"),
+                filas = filas,
+                aviso = r.Aviso
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Json(new { ok = false, error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { ok = false, error = "Error: " + ex.Message });
         }
     }
 

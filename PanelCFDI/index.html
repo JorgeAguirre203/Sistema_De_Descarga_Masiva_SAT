@@ -17,17 +17,17 @@
     <link rel="stylesheet" href="Designs/StyleIndex.css">
 
     <script>
-                    try {
-                        if (localStorage.getItem('panelcfdi.lateral.fijada') !== '0') document.documentElement.classList.add('fijada');
-                    } catch (e) {
-                        document.documentElement.classList.add('fijada');
-                    }
+                            try {
+                                if (localStorage.getItem('panelcfdi.lateral.fijada') !== '0') document.documentElement.classList.add('fijada');
+                            } catch (e) {
+                                document.documentElement.classList.add('fijada');
+                            }
 
-                    try {
-                        var t = localStorage.getItem('panelcfdi.tema');
-                        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
-                        document.documentElement.dataset.tema = t;
-                    } catch (e) { }
+                            try {
+                                var t = localStorage.getItem('panelcfdi.tema');
+                                if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
+                                document.documentElement.dataset.tema = t;
+                            } catch (e) { }
     </script>
 </head>
 
@@ -69,22 +69,22 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" /></svg>
                 <span class="nav-texto">Solicitudes al SAT</span><span class="nav-badge" id="nav-sol"></span>
             </button>
-                <button type="button" class="nav-item" data-vista="config" title="Configuración">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1" /></svg>
-                    <span class="nav-texto">Configuración</span>
-                </button>
+            <button type="button" class="nav-item" data-vista="config" title="Configuración">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1" /></svg>
+                <span class="nav-texto">Configuración</span>
+            </button>
 
-                <button type="button" class="nav-item" id="btnExportarPdf" title="Exportar PDF" data-vista="nomina">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M6 3h8l5 5v13H6z" />
-                        <path d="M14 3v5h5" />
-                        <path d="M12.5 11v6" />
-                        <path d="M10 14.5l2.5 2.5 2.5-2.5" />
-                    </svg>
-                    <span class="nav-texto">Exportar PDF</span>
-                </button>
+            <button type="button" class="nav-item" id="btnExportarPdf" title="Exportar PDF" data-vista="nomina">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 3h8l5 5v13H6z" />
+                    <path d="M14 3v5h5" />
+                    <path d="M12.5 11v6" />
+                    <path d="M10 14.5l2.5 2.5 2.5-2.5" />
+                </svg>
+                <span class="nav-texto">Exportar PDF</span>
+            </button>
 
-         
+
             <button type="button" class="nav-item" data-vista="consulta" title="Configuracion Worker">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
                 <span class="nav-texto">Consulta única</span>
@@ -395,7 +395,7 @@
 
         </section>
 
-      
+
 
         <section class="config vista" id="vista-config" hidden>
 
@@ -415,6 +415,10 @@
                 <button class="tab" role="tab" id="tab-intervalos"
                         aria-selected="false" aria-controls="panel-intervalos" data-panel="panel-intervalos" tabindex="-1">
                     Intervalos
+                </button>
+                <button class="tab" role="tab" id="tab-fiel"
+                        aria-selected="false" aria-controls="panel-fiel" data-panel="panel-fiel" tabindex="-1">
+                    FIEL
                 </button>
             </div>
 
@@ -461,7 +465,43 @@
                 </div>
             </div>
 
-          
+            <!-- FIEL DE LOS CONTRIBUYENTES -->
+            <div class="tab-panel" id="panel-fiel" role="tabpanel" aria-labelledby="tab-fiel" hidden>
+                <div class="config-caja">
+                    <div class="config-cuerpo">
+                        <div class="config-bloque fechas">
+
+                            <h3>FIEL del contribuyente</h3>
+                            <p class="ayuda">
+                                Sube el certificado (.cer), la clave privada (.key) y su contraseña. Los archivos se guardan en
+                                <code id="fielCarpeta">—</code> (si la carpeta no existe se crea) y se actualiza la configuración del RFC.
+                                El RFC debe estar dado de alta en "Fecha de búsqueda".
+                            </p>
+
+                            <div class="fiel-form">
+                                <select id="fielRfc" class="campo" aria-label="RFC de la FIEL"></select>
+                                <label class="fiel-archivo">
+                                    Certificado (.cer)
+                                    <input type="file" id="fielCer" accept=".cer">
+                                </label>
+                                <label class="fiel-archivo">
+                                    Clave privada (.key)
+                                    <input type="file" id="fielKey" accept=".key">
+                                </label>
+                                <input type="password" id="fielClave" class="campo" placeholder="CONTRASEÑA DE LA CLAVE" autocomplete="new-password" aria-label="Contraseña de la clave privada">
+                                <button type="button" id="btnSubirFiel" class="btn btn-principal">Subir FIEL</button>
+                            </div>
+
+                            <div class="fechas-tabla" id="tablaFiel"></div>
+
+                            <div id="msgFiel" class="mensaje" aria-live="polite"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="tab-panel" id="panel-intervalos" role="tabpanel" aria-labelledby="tab-intervalos" hidden>
                 <div class="tabla">
                     <table>
@@ -494,7 +534,7 @@
                 <div id="msgTiempos" class="mensaje" aria-live="polite" style="margin-top:16px"></div>
             </div>
 
-            </section>
+        </section>
 
 
 

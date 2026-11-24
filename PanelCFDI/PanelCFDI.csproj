@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -124,6 +125,7 @@
     <Compile Include="Controllers\CfdiRepo.cs" />
     <Compile Include="Controllers\ControlConsultaRepo.cs" />
     <Compile Include="Controllers\ControlController.cs" />
+    <Compile Include="Controllers\FielService.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -156,10 +158,12 @@
     <Content Include="Javascript\barra-lateral.js" />
     <Content Include="Javascript\cfdi.js" />
     <Content Include="Javascript\fechas-rfc.js" />
+    <Content Include="Javascript\fiel.js" />
     <Content Include="Javascript\formato.js" />
     <Content Include="Javascript\main.js" />
     <Content Include="Javascript\navegacion.js" />
     <Content Include="Javascript\nomina.js" />
+    <Content Include="Javascript\Tablas.js" />
     <Content Include="Javascript\tema.js" />
     <Content Include="Javascript\utils.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />

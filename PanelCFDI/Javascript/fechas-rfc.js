@@ -67,11 +67,15 @@ function pintarFechas(filas) {
 
     $('vacio-fechas').style.display = rfcs.length ? 'none' : 'block';
 
-   
+
     const rec = filas.filter(f => f.tipo === 'RECIBIDO' && f.fecha).map(f => f.fecha).sort();
-    $('desde').textContent = rec.length
-        ? rec[0] + (rec.length > 1 ? ' (la más antigua de ' + rec.length + ' RFC)' : '')
-        : '—';
+    // El <strong id="desde"> está comentado en index.html; si no existe, no se pinta.
+    const desde = $('desde');
+    if (desde) {
+        desde.textContent = rec.length
+            ? rec[0] + (rec.length > 1 ? ' (la más antigua de ' + rec.length + ' RFC)' : '')
+            : '—';
+    }
 }
 
 async function fijarFecha(rfc, datos) {

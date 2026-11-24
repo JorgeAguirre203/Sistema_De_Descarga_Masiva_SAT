@@ -4,6 +4,7 @@ import './tema.js';
 import './nomina.js';
 import './Tablas.js';
 import { cargar } from './fechas-rfc.js';
+import './fiel.js';
 import { pintar, cargarDatos } from './cfdi.js';
 
 
@@ -83,7 +84,6 @@ btnEliminar.addEventListener('click', async () => {
 
             btn.disabled = true;
             try {
-                s
                 const resp = await fetch(URL_FIJAR, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -133,7 +133,7 @@ if (raiz) {
         raiz.classList.toggle('cf-pausa', pausa);
     }
 
- 
+
 
     function mostrar(i) {
 
