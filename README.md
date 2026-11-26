@@ -13,13 +13,29 @@ en caso de querer usarlo se le debera dar de alta en el sistema manualmente.
 
 -- Requisitos
 Windows con .NET Framework 4.8, y IIS o IIS Express (IIS Express si se abre desde Visual Studio). Es la base del equipo.
+
+
 Acceso a internet, para llegar a los servicios del SAT y a los paquetes NuGet o fuentes del panel.
+
+
 SQL Server con la base DescargaMasivaAutonoma, ya creada con sus tablas.
+
+
 Modificar la cadena de conexión en el Web.config para que apunte a tu instancia (hoy usa localhost\SQLEXPRESS01).
+
+
 IIS para PanelCFDI: publicar el panel como sitio web.
+
+
 Dar a la identidad del grupo de aplicaciones de IIS un login en SQL Server, con permisos sobre la base. Sin esto el panel no puede leer ni escribir datos.
+
+
 Dar permiso de escritura en la carpeta de la FIEL a esa misma identidad, para que el panel pueda guardar los .cer y .key.
+
+
 Contar con la FIEL de el o los contribuyentes que se vayan a registrar, y cargarla desde el panel. Debe estar vigente. Los archivos los puedes ir juntando desde antes, pero hasta este punto ya tienes dónde subirlos.
+
+
 Dar de alta el servicio de Windows.
 
 
