@@ -341,6 +341,12 @@
                     <option value="Traslado">Traslado</option>
                 </select>
 
+                <select id="origen" aria-label="Filtrar por recibidos o emitidos">
+                    <option value="">Recibidos y emitidos</option>
+                    <option value="Recibido">Recibidos</option>
+                    <option value="Emitido">Emitidos</option>
+                </select>
+
             </div>
 
             <!-- TABLA -->
@@ -357,9 +363,10 @@
                             <th>UUID</th>
                             <th>Tipo</th>
                             <th class="num">Total</th>
-                            <th>Archivos</th>
+                            <th>Archivos XML</th>
+                            <th>Archivos PDF</th>
                         </tr>
-                    </thead>
+                    </thead>        
 
                     <tbody id="filas"></tbody>
 
@@ -409,13 +416,15 @@
                         aria-selected="true" aria-controls="panel-fechas" data-panel="panel-fechas">
                     Fecha de búsqueda
                 </button>
-                <button class="tab" role="tab" id="tab-intervalos"
-                        aria-selected="false" aria-controls="panel-intervalos" data-panel="panel-intervalos" tabindex="-1">
-                    Intervalos
-                </button>
+
                 <button class="tab" role="tab" id="tab-fiel"
                         aria-selected="false" aria-controls="panel-fiel" data-panel="panel-fiel" tabindex="-1">
                     FIEL
+                </button>
+
+                <button class="tab" role="tab" id="tab-intervalos"
+                        aria-selected="false" aria-controls="panel-intervalos" data-panel="panel-intervalos" tabindex="-1">
+                    Intervalos
                 </button>
             </div>
 
@@ -471,23 +480,119 @@
                             <h3>FIEL del contribuyente</h3>
                             <p class="ayuda">
                                 Sube el certificado (.cer), la clave privada (.key) y su contraseña. Los archivos se guardan en
-                                <code id="fielCarpeta">—</code> (si la carpeta no existe se crea) y se actualiza la configuración del RFC.
+                                <code id="fielCarpeta">—</code> y se actualiza la configuración del RFC.
                                 El RFC debe estar dado de alta en "Fecha de búsqueda".
                             </p>
 
+
                             <div class="fiel-form">
-                                <select id="fielRfc" class="campo" aria-label="RFC de la FIEL"></select>
-                                <label class="fiel-archivo">
-                                    Certificado (.cer)
-                                    <input type="file" id="fielCer" accept=".cer">
-                                </label>
-                                <label class="fiel-archivo">
-                                    Clave privada (.key)
-                                    <input type="file" id="fielKey" accept=".key">
-                                </label>
-                                <input type="password" id="fielClave" class="campo" placeholder="CONTRASEÑA DE LA CLAVE" autocomplete="new-password" aria-label="Contraseña de la clave privada">
-                                <button type="button" id="btnSubirFiel" class="btn btn-principal">Subir FIEL</button>
+
+                                <!-- 1. CONTRIBUYENTE -->
+                                <div class="fiel-seccion fiel-contribuyente">
+
+                                    <div class="fiel-seccion-titulo">
+                                        <span class="fiel-icono">01</span>
+                                        <div>
+                                            <h4>Contribuyente</h4>
+                                            <p>Selecciona el RFC al que pertenece esta FIEL.</p>
+                                        </div>
+                                    </div>
+
+                                    <select id="fielRfc"
+                                            class="campo"
+                                            aria-label="RFC de la FIEL">
+                                    </select>
+
+                                </div>
+
+                                <!-- 2. ARCHIVOS -->
+                                <div class="fiel-seccion fiel-documentos">
+
+                                    <div class="fiel-seccion-titulo">
+                                        <span class="fiel-icono">02</span>
+                                        <div>
+                                            <h4>Archivos de la FIEL</h4>
+                                            <p>Selecciona los dos archivos proporcionados por el SAT.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="fiel-archivos">
+
+                                        <!-- CERTIFICADO -->
+                                        <label class="fiel-archivo">
+                                            <span class="fiel-archivo-titulo">
+                                                Certificado digital
+                                                <small>.CER</small>
+                                                
+                                            </span>
+
+                                            <span class="fiel-archivo-descripcion">
+                                                Archivo público de identificación.
+                                            </span>
+
+                                            <input type="file"
+                                                   id="fielCer"
+                                                   accept=".cer">
+                                        </label>
+
+                                        <!-- CLAVE PRIVADA -->
+                                        <label class="fiel-archivo">
+                                            <span class="fiel-archivo-titulo">
+                                                Clave privada
+                                                <small>.KEY</small>
+                                            </span>
+
+                                            <span class="fiel-archivo-descripcion">
+                                                Archivo privado de la FIEL.
+                                            </span>
+
+                                            <input type="file"
+                                                   id="fielKey"
+                                                   accept=".key">
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- 3. SEGURIDAD -->
+                                <div class="fiel-seccion fiel-seguridad">
+
+                                    <div class="fiel-seccion-titulo">
+                                        <span class="fiel-icono">03</span>
+                                        <div>
+                                            <h4>Seguridad de la FIEL</h4>
+                                            <p>Introduce la contraseña correspondiente a la clave privada.</p>
+                                        </div>
+                                    </div>
+
+                                    <input type="password"
+                                           id="fielClave"
+                                           class="campo"
+                                           placeholder="Contraseña de la clave privada"
+                                           autocomplete="new-password"
+                                           aria-label="Contraseña de la clave privada">
+
+                                </div>
+
+                                <!-- 4. ACCIONES -->
+                                <div class="fiel-acciones">
+
+                                    <button type="button"
+                                            id="btnSubirFiel"
+                                            class="btn btn-principal">
+                                        Subir FIEL
+                                    </button>
+
+                                    <span class="fiel-nota">
+                                        <span aria-hidden="true">●</span>
+                                        Los archivos se almacenarán asociados al RFC seleccionado.
+                                    </span>
+
+                                </div>
+
                             </div>
+
 
                             <div class="fechas-tabla" id="tablaFiel"></div>
 
@@ -512,23 +617,23 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoRecibidos" placeholder="Minutos" aria-label="Minutos para Recibidos"></td>
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoRecibidos" placeholder="Horas" aria-label="Minutos para Recibidos"></td>
                                 <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Recibidos" data-input="tiempoRecibidos">Aplicar</button></td>
 
-                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoEmitidos" placeholder="Minutos" aria-label="Minutos para Emitidos"></td>
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoEmitidos" placeholder="Horas" aria-label="Minutos para Emitidos"></td>
                                 <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Emitidos" data-input="tiempoEmitidos">Aplicar</button></td>
 
-                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoPendientes" placeholder="Minutos" aria-label="Minutos para Pendientes"></td>
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoPendientes" placeholder="Horas" aria-label="Minutos para Pendientes"></td>
                                 <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Pendientes" data-input="tiempoPendientes">Aplicar</button></td>
 
-                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoVigencia" placeholder="Minutos" aria-label="Minutos para Vigentes"></td>
+                                <td><input class="campo" type="number" min="1" max="1440" id="tiempoVigencia" placeholder="Horas" aria-label="Minutos para Vigentes"></td>
                                 <td><button class="btn btn-principal btn-tiempo" type="button" data-tipo="Vigencia" data-input="tiempoVigencia">Aplicar</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div id="msgTiempos" class="mensaje" aria-live="polite" style="margin-top:16px"></div>
+                
             </div>
 
         </section>

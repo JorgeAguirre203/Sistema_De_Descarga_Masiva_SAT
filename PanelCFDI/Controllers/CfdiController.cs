@@ -31,6 +31,7 @@ public class CfdiController : Controller
                 rfc = c.Rfc,
                 receptor = c.Receptor,
                 tipo = c.Tipo,
+                origen = c.Origen,
                 total = c.Total,
                 xml = Url.Content("~/Cfdi/Xml?uuid=" + HttpUtility.UrlEncode(c.Uuid)),
                 pdf = ""

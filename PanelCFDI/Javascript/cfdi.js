@@ -184,6 +184,7 @@ export function pintar() {
                 <tr
                     data-mes="${esc(c.fecha.slice(0, 7))}"
                     data-tipo="${esc(c.tipo)}"
+                    data-origen="${esc(c.origen)}"
                     data-receptor="${esc(c.receptor)}">
 
                     <td>
@@ -192,6 +193,9 @@ export function pintar() {
                     <td class="uuid">
                         ${esc(c.receptor)}
                     </td>
+
+                    
+
 
 
                     <td class="emisor">
@@ -354,7 +358,11 @@ function filtrar() {
                 f.dataset.tipo ===
                 $('tipo').value
             )
-
+            &&
+            (
+                !$('origen').value ||
+                f.dataset.origen === $('origen').value
+            )
             &&
 
             (
@@ -397,7 +405,7 @@ function filtrar() {
 
 // EVENTOS DE FILTROS
 
-['buscar', 'mes', 'tipo', 'rfcFiltro']
+['buscar', 'mes', 'tipo', 'origen', 'rfcFiltro']
     .forEach(
         id =>
             $(id).addEventListener(

@@ -13,6 +13,7 @@ public class CfdiFila
     public string Rfc;
     public string Receptor;
     public string Tipo;
+    public string Origen;
     public decimal Total;
 }
 
@@ -25,16 +26,26 @@ public static class CfdiRepo
     public static List<CfdiFila> ListarCfdi(int max)
     {
         const string sql = @"
-            SELECT TOP (@max)
-                d.id_factura AS uuid,
-                d.Archivoxml.value('(/*:Comprobante/@Fecha)[1]', 'varchar(19)')                    AS fecha,
-                d.Archivoxml.value('(/*:Comprobante/*:Emisor/@Nombre)[1]', 'nvarchar(300)')        AS emisor,
-                d.Archivoxml.value('(/*:Comprobante/*:Emisor/@Rfc)[1]', 'varchar(13)')             AS rfc,
-                d.Archivoxml.value('(/*:Comprobante/*:Receptor/@Rfc)[1]', 'varchar(13)')           AS receptor,
-                d.Archivoxml.value('(/*:Comprobante/@TipoDeComprobante)[1]', 'varchar(1)')         AS tipo,
-                d.Archivoxml.value('(/*:Comprobante/@Total)[1]', 'decimal(18,2)')                  AS total
-            FROM DatosXML d
-            ORDER BY d.fecha_guardado DESC;";
+    SELECT TOP (@max)
+        x.uuid, x.fecha, x.emisor, x.rfc, x.receptor, x.tipo, x.total,
+        CASE
+            WHEN EXISTS (SELECT 1 FROM ControlRFCSAT c WHERE c.RFC = x.receptor) THEN 'Recibido'
+            WHEN EXISTS (SELECT 1 FROM ControlRFCSAT c WHERE c.RFC = x.rfc)      THEN 'Emitido'
+            ELSE ''
+        END AS origen
+    FROM (
+        SELECT
+            d.id_factura AS uuid,
+            d.fecha_guardado,
+            d.Archivoxml.value('(/*:Comprobante/@Fecha)[1]', 'varchar(19)')             AS fecha,
+            d.Archivoxml.value('(/*:Comprobante/*:Emisor/@Nombre)[1]', 'nvarchar(300)') AS emisor,
+            d.Archivoxml.value('(/*:Comprobante/*:Emisor/@Rfc)[1]', 'varchar(13)')      AS rfc,
+            d.Archivoxml.value('(/*:Comprobante/*:Receptor/@Rfc)[1]', 'varchar(13)')    AS receptor,
+            d.Archivoxml.value('(/*:Comprobante/@TipoDeComprobante)[1]', 'varchar(1)')  AS tipo,
+            d.Archivoxml.value('(/*:Comprobante/@Total)[1]', 'decimal(18,2)')           AS total
+        FROM DatosXML d
+    ) x
+    ORDER BY x.fecha_guardado DESC;";
 
         var lista = new List<CfdiFila>();
 
@@ -56,6 +67,7 @@ public static class CfdiRepo
                         Rfc = r["rfc"] as string ?? "",
                         Receptor = r["receptor"] as string ?? "",
                         Tipo = NombreTipo(r["tipo"] as string),
+                        Origen = r["origen"] as string ?? "",
                         Total = r["total"] == DBNull.Value ? 0m : (decimal)r["total"]
                     });
                 }
